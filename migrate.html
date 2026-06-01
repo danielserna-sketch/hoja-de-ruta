@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migración a Supabase — Stratika</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #050608;
+      color: #F5F7FA;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #0B1117;
+      border: 1px solid rgba(167,176,188,0.12);
+      padding: 32px;
+      border-radius: 8px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      color: #A7B0BC;
+      font-size: 14px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .step {
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(167,176,188,0.12);
+    }
+    .step:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #22D3EE;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .step-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #A7B0BC;
+    }
+    .stat-box {
+      background: #161D25;
+      border: 1px solid rgba(167,176,188,0.12);
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    .stat-box strong {
+      color: #F5F7FA;
+      display: block;
+      margin-bottom: 8px;
+    }
+    button {
+      background: #3B82F6;
+      color: white;
+      border: none;
+      padding: 11px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: opacity 0.2s;
+      font-family: inherit;
+    }
+    button:hover {
+      opacity: 0.85;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-danger {
+      background: #ef4444;
+    }
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .status.loading {
+      background: rgba(59,130,246,0.1);
+      color: #3B82F6;
+    }
+    .status.success {
+      background: rgba(34,197,94,0.1);
+      color: #22c55e;
+    }
+    .status.error {
+      background: rgba(239,68,68,0.1);
+      color: #ef4444;
+    }
+    .warning-box {
+      background: rgba(249,115,22,0.08);
+      border-left: 3px solid #f97316;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #F5F7FA;
+      line-height: 1.6;
+    }
+    code {
+      background: #161D25;
+      border: 1px solid rgba(167,176,188,0.12);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: #22D3EE;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Migración a Supabase</h1>
+  <p class="subtitle">Transfiere todos tus datos de LocalStorage a Supabase de forma segura y automática.</p>
+
+  <!-- PASO 1 -->
+  <div class="step">
+    <div class="step-title">Paso 1: Verificar LocalStorage</div>
+    <div class="step-content">
+      <p style="margin-bottom: 12px;">Estado actual de tus datos locales:</p>
+      <div class="stat-box" id="local-stats">
+        <strong>Cargando datos...</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step">
+    <div class="step-title">Paso 2: Crear Tablas en Supabase</div>
+    <div class="step-content">
+      <p style="margin-bottom: 12px;">Ejecuta este SQL en el <strong>SQL Editor</strong> de tu proyecto Supabase:</p>
+      <div class="stat-box" style="white-space: pre-wrap; overflow-x: auto;">-- Crear tabla plans
+CREATE TABLE public.plans (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  owner TEXT,
+  description TEXT,
+  created_at DATE,
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Crear tabla initiatives
+CREATE TABLE public.initiatives (
+  id TEXT PRIMARY KEY,
+  plan_id TEXT NOT NULL REFERENCES public.plans(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  responsible TEXT,
+  start_date DATE,
+  end_date DATE,
+  priority TEXT DEFAULT 'medium',
+  status TEXT DEFAULT 'not-started',
+  progress INTEGER DEFAULT 0,
+  phases TEXT[],
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Desactivar RLS (para usar sin autenticación)
+ALTER TABLE public.plans DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.initiatives DISABLE ROW LEVEL SECURITY;
+
+-- Crear índices
+CREATE INDEX idx_initiatives_plan_id ON public.initiatives(plan_id);</div>
+      <div class="warning-box">
+        ⚠️ <strong>Importante:</strong> Si planeas usar autenticación después, mantén RLS activado y configura policies.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="step">
+    <div class="step-title">Paso 3: Ejecutar Migración</div>
+    <div class="step-content">
+      <p style="margin-bottom: 16px;">Una vez creadas las tablas, haz clic para migrar automáticamente:</p>
+      <button id="migrate-btn" onclick="executeMigration()">🚀 Migrar Ahora</button>
+      <div id="migration-status"></div>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step">
+    <div class="step-title">Paso 4: Verificar en Supabase</div>
+    <div class="step-content">
+      <p style="margin-bottom: 12px;">Una vez completada la migración, verifica en tu dashboard de Supabase:</p>
+      <ul style="margin-left: 20px; line-height: 2;">
+        <li>✓ Abre la tabla <code>plans</code> en Supabase</li>
+        <li>✓ Verifica que estén todos tus planes</li>
+        <li>✓ Abre la tabla <code>initiatives</code> y verifica iniciativas</li>
+        <li>✓ Vuelve a <code>app.html</code> y recarga la página</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BONUS -->
+  <div class="step">
+    <div class="step-title">Paso 5: Limpiar LocalStorage (Opcional)</div>
+    <div class="step-content">
+      <p style="margin-bottom: 12px;">Si la migración es exitosa, puedes eliminar los datos de LocalStorage:</p>
+      <button class="btn-danger" onclick="clearLocalStorage()">🗑️ Limpiar LocalStorage</button>
+      <p style="margin-top: 12px; font-size: 12px; opacity: 0.6;">Los datos seguirán en Supabase. Esta acción es segura después de una migración exitosa.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.1/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+
+<script>
+const STORAGE_KEY = 'stratika_plans_v3';
+
+async function loadLocalStats() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      document.getElementById('local-stats').innerHTML = `
+        <strong style="color: #A7B0BC;">❌ Sin datos en LocalStorage</strong>
+        <p style="margin-top: 8px; font-size: 12px;">No hay información local para migrar.</p>
+      `;
+      return null;
+    }
+    const plans = JSON.parse(raw);
+    const initCount = plans.reduce((sum, p) => sum + (p.initiatives || []).length, 0);
+    document.getElementById('local-stats').innerHTML = `
+      <strong>✓ Datos encontrados en LocalStorage:</strong>
+      <div style="margin-top: 8px;">
+        <div>📋 Planes: <span style="color: #22D3EE;">${plans.length}</span></div>
+        <div>📌 Iniciativas: <span style="color: #22D3EE;">${initCount}</span></div>
+      </div>
+    `;
+    return plans;
+  } catch (e) {
+    document.getElementById('local-stats').innerHTML = `
+      <strong style="color: #ef4444;">❌ Error al leer datos</strong>
+      <p style="margin-top: 8px; font-size: 12px; color: #ef4444;">${e.message}</p>
+    `;
+    return null;
+  }
+}
+
+async function executeMigration() {
+  const btn = document.getElementById('migrate-btn');
+  const statusEl = document.getElementById('migration-status');
+  btn.disabled = true;
+
+  statusEl.className = 'status loading';
+  statusEl.textContent = '⏳ Conectando con Supabase...';
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      throw new Error('No hay datos en LocalStorage para migrar.');
+    }
+    const plans = JSON.parse(raw);
+
+    if (!window.supabaseClient) {
+      throw new Error('Cliente de Supabase no inicializado.');
+    }
+
+    // Limpiar Supabase
+    statusEl.textContent = '⏳ Limpiando datos anteriores...';
+    const { error: delInitError } = await supabaseClient.from('initiatives').delete().neq('id', '');
+    const { error: delPlanError } = await supabaseClient.from('plans').delete().neq('id', '');
+
+    if (delInitError || delPlanError) {
+      throw new Error('Error al limpiar Supabase: ' + (delInitError?.message || delPlanError?.message));
+    }
+
+    // Insertar planes
+    statusEl.textContent = '⏳ Migrando planes...';
+    const plansPayload = plans.map(p => ({
+      id: p.id,
+      name: p.name,
+      owner: p.owner || null,
+      description: p.desc || null,
+      created_at: p.createdAt || null,
+    }));
+
+    if (plansPayload.length) {
+      const { error: insertPlanError } = await supabaseClient.from('plans').insert(plansPayload);
+      if (insertPlanError) throw new Error('Error al insertar planes: ' + insertPlanError.message);
+    }
+
+    // Insertar iniciativas
+    statusEl.textContent = '⏳ Migrando iniciativas...';
+    const initiativesPayload = plans.flatMap(p =>
+      (p.initiatives || []).map(i => ({
+        id: i.id,
+        plan_id: p.id,
+        name: i.name,
+        responsible: i.responsible || null,
+        start_date: i.start || null,
+        end_date: i.end || null,
+        priority: i.priority || 'medium',
+        status: i.status || 'not-started',
+        progress: typeof i.progress === 'number' ? i.progress : 0,
+        phases: i.phases || [],
+      }))
+    );
+
+    if (initiativesPayload.length) {
+      const { error: insertInitError } = await supabaseClient.from('initiatives').insert(initiativesPayload);
+      if (insertInitError) throw new Error('Error al insertar iniciativas: ' + insertInitError.message);
+    }
+
+    const totalInits = initiativesPayload.length;
+    statusEl.className = 'status success';
+    statusEl.textContent = `✅ ¡Migración completada! ${plansPayload.length} planes y ${totalInits} iniciativas transferidas a Supabase.`;
+
+  } catch (error) {
+    statusEl.className = 'status error';
+    statusEl.textContent = `❌ Error: ${error.message}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function clearLocalStorage() {
+  if (confirm('¿Estás seguro? Esto solo eliminará los datos de LocalStorage. Los datos en Supabase se mantienen.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    loadLocalStats();
+    alert('✓ LocalStorage limpiado.');
+  }
+}
+
+// Cargar estadísticas al abrir la página
+loadLocalStats();
+</script>
+
+</body>
+</html>

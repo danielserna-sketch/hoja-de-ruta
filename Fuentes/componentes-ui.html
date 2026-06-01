@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Componentes UI — Stratika.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{--black:#050608;--deep:#0B1117;--surface:#1F2933;--s2:#161D25;--muted:#A7B0BC;--light:#F5F7FA;--blue:#3B82F6;--cyan:#22D3EE;--indigo:#6366F1;--border:rgba(167,176,188,0.12);--borderb:rgba(167,176,188,0.25);--font:'Plus Jakarta Sans',sans-serif;--mono:'IBM Plex Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--black);color:var(--light);-webkit-font-smoothing:antialiased}
+.hdr{background:var(--deep);border-bottom:1px solid var(--border);padding:28px 8%;display:flex;justify-content:space-between;align-items:center}
+.hdr-logo{font-size:20px;font-weight:800;letter-spacing:-.5px}.hdr-logo span{color:var(--blue)}
+.hdr-meta{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;opacity:.6}
+.hero{padding:72px 8% 56px;background:var(--black);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:64px 64px}
+.hero-ey{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;position:relative}
+.hero-ey::before{content:'';width:24px;height:1px;background:var(--cyan)}
+.hero-title{font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-2px;line-height:.95;margin-bottom:20px;position:relative}
+.hero-title em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:14px;color:var(--muted);max-width:500px;line-height:1.7;position:relative}
+.wrap{max-width:1200px;margin:0 auto;padding:0 8%}
+.section{padding:64px 0;border-bottom:1px solid var(--border)}
+.sec-hd{display:flex;align-items:baseline;gap:16px;margin-bottom:40px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;opacity:.6}
+.sec-t{font-size:clamp(22px,2.8vw,32px);font-weight:800;letter-spacing:-1px;line-height:1.1}
+.sec-t em{font-style:normal;color:var(--cyan)}
+h3{font-size:15px;font-weight:700;color:var(--light);margin:36px 0 14px}
+h3:first-child{margin-top:0}
+p{color:var(--muted);font-size:14px;line-height:1.75;margin-bottom:12px}
+p strong{color:var(--light);font-weight:600}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{background:var(--surface);font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);padding:11px 16px;text-align:left;border-bottom:1px solid var(--borderb)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top;line-height:1.55}
+td strong{color:var(--light)}
+code{font-family:var(--mono);font-size:11px;background:rgba(59,130,246,.06);padding:2px 8px;color:var(--blue)}
+.hl{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--blue);padding:24px 28px;margin:20px 0}
+.hl.hc{border-left-color:var(--cyan)}.hl.hi{border-left-color:var(--indigo)}
+.hl-l{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.hl p{color:rgba(245,247,250,.82);font-size:13px;margin:0}
+.demo{border:1px solid var(--border);background:var(--s2);margin:24px 0;overflow:hidden}
+.demo-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--deep);opacity:.7}
+.demo-body{padding:32px}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:11px 24px;cursor:pointer;border:none;text-decoration:none;transition:opacity .15s,background .15s}
+.btn:hover{opacity:.82}
+.bp{background:var(--blue);color:#fff}
+.bc{background:var(--cyan);color:var(--black)}
+.bo{background:transparent;color:var(--light);border:1px solid var(--borderb)}
+.bg2{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.bi{background:var(--indigo);color:#fff}
+.bsm{padding:7px 16px;font-size:10px}
+.blg{padding:14px 32px;font-size:12px}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
+.btn-row:last-child{margin-bottom:0}
+
+/* ═══ CARDS ═══ */
+.cards-demo{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0}
+.ucard{background:var(--deep);border:1px solid var(--border);border-top:2px solid var(--blue);padding:24px;width:260px;flex-shrink:0}
+.ucard.uc{border-top-color:var(--cyan)}.ucard.ui{border-top-color:var(--indigo)}
+.uc-tag{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.ucard.uc .uc-tag{color:var(--cyan)}.ucard.ui .uc-tag{color:var(--indigo)}
+.uc-title{font-size:14px;font-weight:700;color:var(--light);margin-bottom:8px;line-height:1.3}
+.uc-text{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.uc-link{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:1px;text-transform:uppercase;text-decoration:none;border-bottom:1px solid rgba(59,130,246,.3);padding-bottom:2px;display:inline-flex;align-items:center;gap:6px}
+.ucard.uc .uc-link{color:var(--cyan);border-color:rgba(34,211,238,.3)}
+.ucard.ui .uc-link{color:var(--indigo);border-color:rgba(99,102,241,.3)}
+
+/* STAT CARD */
+.stat-cards{display:flex;gap:1px;background:var(--border);margin:24px 0}
+.stat-card{background:var(--deep);padding:28px;flex:1}
+.stat-n{font-family:var(--mono);font-size:32px;font-weight:500;color:var(--blue);line-height:1;margin-bottom:8px}
+.stat-card:nth-child(2) .stat-n{color:var(--cyan)}
+.stat-card:nth-child(3) .stat-n{color:var(--indigo)}
+.stat-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.stat-desc{font-size:12px;color:var(--muted);line-height:1.5;opacity:.7}
+
+/* CASE CARD */
+.case-card{background:var(--deep);border:1px solid var(--border);padding:28px;margin:8px 0}
+.case-meta{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.case-badge{font-family:var(--mono);font-size:10px;padding:4px 12px;letter-spacing:1px;text-transform:uppercase}
+.case-b-sector{background:rgba(59,130,246,.08);color:var(--blue);border:1px solid rgba(59,130,246,.2)}
+.case-b-phase{background:rgba(34,211,238,.07);color:var(--cyan);border:1px solid rgba(34,211,238,.2)}
+.case-title{font-size:16px;font-weight:700;color:var(--light);margin-bottom:8px;letter-spacing:-.3px}
+.case-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.case-result{display:flex;gap:24px;padding-top:16px;border-top:1px solid var(--border)}
+.cr-item{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:1px}
+
+/* ═══ FORMS ═══ */
+.uform{max-width:420px}
+.uf{margin-bottom:20px}
+.ul{display:block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ui{width:100%;background:var(--deep);border:1px solid var(--borderb);color:var(--light);font-family:var(--font);font-size:13px;padding:11px 16px;outline:none;transition:border-color .2s}
+.ui:focus{border-color:var(--blue)}
+.ui::placeholder{color:var(--muted);opacity:.4}
+textarea.ui{resize:vertical;min-height:80px}
+.usel{width:100%;background:var(--deep);border:1px solid var(--borderb);color:var(--light);font-family:var(--font);font-size:13px;padding:11px 16px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A7B0BC' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.uf-hint{font-family:var(--mono);font-size:10px;color:var(--muted);opacity:.5;margin-top:6px;letter-spacing:.5px}
+.uf-error{font-family:var(--mono);font-size:10px;color:rgba(239,68,68,.8);margin-top:6px;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+
+/* ═══ BANNERS ═══ */
+.banner-cta{background:var(--s2);border:1px solid var(--border);padding:40px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;position:relative;overflow:hidden;margin:24px 0}
+.banner-cta::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.banner-cta-body{}
+.banner-cta-ey{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.banner-cta-title{font-size:22px;font-weight:800;color:var(--light);letter-spacing:-.5px;margin-bottom:8px}
+.banner-cta-sub{font-size:13px;color:var(--muted);line-height:1.6}
+.banner-info{background:var(--deep);border:1px solid var(--border);padding:24px 28px;border-left:3px solid var(--cyan);margin:16px 0}
+.bi-ey{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.bi-text{font-size:13px;color:rgba(245,247,250,.8);line-height:1.65}
+
+/* ═══ BADGES & TAGS ═══ */
+.badges-demo{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}
+.badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border:1px solid}
+.badge-b{color:var(--blue);background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2)}
+.badge-c{color:var(--cyan);background:rgba(34,211,238,.07);border-color:rgba(34,211,238,.2)}
+.badge-i{color:var(--indigo);background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.2)}
+.badge-m{color:var(--muted);background:rgba(167,176,188,.05);border-color:rgba(167,176,188,.15)}
+.badge-s{color:#22c55e;background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2)}
+.badge-e{color:rgba(239,68,68,.8);background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.2)}
+
+/* ═══ PROGRESS / DATA ═══ */
+.progress-demo{display:flex;flex-direction:column;gap:16px;margin:24px 0}
+.prog-item{display:flex;flex-direction:column;gap:6px}
+.prog-hd{display:flex;justify-content:space-between;align-items:center}
+.prog-label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px}
+.prog-val{font-family:var(--mono);font-size:11px;color:var(--light);font-weight:500}
+.prog-bar{height:4px;background:var(--surface);position:relative}
+.prog-fill{height:100%;position:absolute;left:0;top:0}
+
+/* ═══ TOOLTIP ═══ */
+.tooltip-demo{display:flex;gap:24px;flex-wrap:wrap;margin:24px 0;align-items:flex-end}
+.tt-wrap{position:relative;display:inline-block}
+.tt-trigger{background:var(--surface);border:1px solid var(--border);padding:10px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;cursor:default}
+.tt-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--borderb);padding:10px 14px;font-size:12px;color:var(--light);white-space:nowrap;pointer-events:none;z-index:10}
+.tt-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--borderb)}
+
+.footer{background:var(--deep);border-top:1px solid var(--border);padding:24px 8%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.f-logo{font-size:15px;font-weight:800;letter-spacing:-.3px}.f-logo span{color:var(--blue)}
+.f-doc{font-family:var(--mono);font-size:10px;color:var(--muted);opacity:.4;letter-spacing:2px}
+@media(max-width:768px){.cards-demo{flex-direction:column}.stat-cards{flex-direction:column}.banner-cta{grid-template-columns:1fr}.section{padding:48px 0}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">Stratika<span>.</span></div>
+  <div class="hdr-meta">Componentes UI · Digital 02</div>
+</div>
+<div class="hero">
+  <div class="hero-ey">Aplicación Digital — Componentes</div>
+  <h1 class="hero-title">Biblioteca de<br><em>Componentes UI</em></h1>
+  <p class="hero-sub">Sistema completo de botones, tarjetas, formularios, banners, badges y componentes de datos para todas las interfaces de Stratika.</p>
+</div>
+<div class="wrap">
+
+<!-- BUTTONS -->
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">01</span><h2 class="sec-t">Sistema de<br><em>Botones</em></h2></div>
+  <div class="demo">
+    <div class="demo-lbl">Variantes de botón</div>
+    <div class="demo-body">
+      <div class="btn-row">
+        <a class="btn bp">Primario →</a>
+        <a class="btn bc">CTA Cyan →</a>
+        <a class="btn bi">Indigo</a>
+        <a class="btn bo">Outline</a>
+        <a class="btn bg2">Ghost</a>
+      </div>
+      <div class="btn-row">
+        <a class="btn bp bsm">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Small
+        </a>
+        <a class="btn bp">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Normal
+        </a>
+        <a class="btn bp blg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Large / Hero
+        </a>
+      </div>
+      <div class="btn-row">
+        <a class="btn bp" style="width:200px;justify-content:center;">Full Width (ejemplo)</a>
+        <a class="btn bo" style="opacity:.4;pointer-events:none;">Deshabilitado</a>
+        <a class="btn bp" style="background:var(--surface);color:var(--muted);cursor:wait;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          Cargando...
+        </a>
+      </div>
+    </div>
+  </div>
+  <table>
+    <tr><th>Variante</th><th>Uso</th><th>CSS base</th></tr>
+    <tr><td><strong>Primario (Blue)</strong></td><td>CTA principal de la página. Solo uno visible por vista.</td><td>background: #3B82F6; color: #fff</td></tr>
+    <tr><td><strong>CTA Cyan</strong></td><td>CTA de segundo nivel o énfasis especial en contextos oscuros.</td><td>background: #22D3EE; color: #050608</td></tr>
+    <tr><td><strong>Indigo</strong></td><td>Acciones relacionadas con IA o módulos de innovación.</td><td>background: #6366F1; color: #fff</td></tr>
+    <tr><td><strong>Outline</strong></td><td>Acción secundaria junto a un botón primario.</td><td>border: 1px solid rgba(167,176,188,0.25); color: #F5F7FA</td></tr>
+    <tr><td><strong>Ghost</strong></td><td>Acción terciaria o de baja prioridad.</td><td>border: 1px solid rgba(167,176,188,0.12); color: #A7B0BC</td></tr>
+  </table>
+</section>
+
+<!-- CARDS -->
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">02</span><h2 class="sec-t">Sistema de<br><em>Tarjetas</em></h2></div>
+  <h3>Cards de servicio / eje</h3>
+  <div class="cards-demo">
+    <div class="ucard">
+      <div class="uc-tag">Eje 01</div>
+      <div class="uc-title">Habilitación Estratégica</div>
+      <div class="uc-text">Conectamos la visión directiva con oportunidades de mercado para construir una ventaja competitiva sostenible.</div>
+      <a class="uc-link" href="#">Conocer más <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="ucard uc">
+      <div class="uc-tag">Eje 02</div>
+      <div class="uc-title">Innovación Organizacional</div>
+      <div class="uc-text">Rediseñamos modelos operativos para eliminar silos y crear estructuras ágiles capaces de innovar de forma constante.</div>
+      <a class="uc-link" href="#">Conocer más <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="ucard ui">
+      <div class="uc-tag">Eje 03</div>
+      <div class="uc-title">Transformación Digital e IA</div>
+      <div class="uc-text">Integramos IA y soluciones digitales para potenciar decisiones y crear valor con los datos de su organización.</div>
+      <a class="uc-link" href="#">Conocer más <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+
+  <h3>Cards de métricas / stats</h3>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-label">Proyectos completados</div>
+      <div class="stat-n">+120</div>
+      <div class="stat-desc">Empresas transformadas en los últimos 5 años</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Sectores atendidos</div>
+      <div class="stat-n">12</div>
+      <div class="stat-desc">Verticales con metodología adaptada</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tasa de continuidad</div>
+      <div class="stat-n">94%</div>
+      <div class="stat-desc">Clientes que continúan con una segunda fase</div>
+    </div>
+  </div>
+
+  <h3>Cards de caso de éxito</h3>
+  <div class="case-card">
+    <div class="case-meta">
+      <span class="case-badge case-b-sector">Tecnología</span>
+      <span class="case-badge case-b-phase">Entender + Definir</span>
+    </div>
+    <div class="case-title">Rediseño estratégico para empresa de software B2B en etapa de escala</div>
+    <div class="case-desc">Empresa con ARR de $2M enfrentaba estancamiento por modelo de ventas mal segmentado y falta de diferenciación en un mercado saturado. Stratika diagnosticó la brecha entre el ICP declarado y el real, rediseñó el go-to-market y definió la hoja de ruta para los siguientes 18 meses.</div>
+    <div class="case-result">
+      <div class="cr-item">+38% velocidad de cierre</div>
+      <div class="cr-item">ICP redefinido en 6 semanas</div>
+      <div class="cr-item">Pipeline +2.4× en 90 días</div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMS -->
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">03</span><h2 class="sec-t">Sistema de<br><em>Formularios</em></h2></div>
+  <div class="demo">
+    <div class="demo-lbl">Formulario de sesión estratégica (versión completa)</div>
+    <div class="demo-body">
+      <div class="uform">
+        <div class="uf">
+          <label class="ul">Nombre completo</label>
+          <input class="ui" type="text" placeholder="Su nombre">
+        </div>
+        <div class="uf">
+          <label class="ul">Empresa</label>
+          <input class="ui" type="text" placeholder="Nombre de su organización">
+          <div class="uf-hint">Razón social o nombre comercial</div>
+        </div>
+        <div class="uf">
+          <label class="ul">Cargo</label>
+          <input class="ui" type="text" placeholder="CEO, Director General, Gerente...">
+        </div>
+        <div class="uf">
+          <label class="ul">Mayor reto organizacional</label>
+          <select class="usel">
+            <option value="">Seleccione una opción</option>
+            <option>Estrategia que no se ejecuta</option>
+            <option>Crecimiento sin estructura operativa</option>
+            <option>Decisiones tecnológicas o de IA sin dirección</option>
+            <option>Transformación organizacional necesaria</option>
+            <option>Otro desafío estratégico</option>
+          </select>
+        </div>
+        <div class="uf">
+          <label class="ul">Cuéntenos brevemente</label>
+          <textarea class="ui" placeholder="¿Qué está ocurriendo en su organización? (opcional, 2–3 líneas)"></textarea>
+        </div>
+        <button class="btn bp blg" style="width:100%;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Solicitar Sesión Estratégica
+        </button>
+        <div class="uf-hint" style="text-align:center;margin-top:12px;">Sin compromisos. Sin costo. Duración: 45 minutos.</div>
+      </div>
+    </div>
+  </div>
+  <h3>Estados de inputs</h3>
+  <div class="demo">
+    <div class="demo-lbl">Estados: default, focus, error, disabled</div>
+    <div class="demo-body" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:600px;">
+      <div>
+        <label class="ul">Default</label>
+        <input class="ui" type="text" placeholder="Texto de ejemplo">
+      </div>
+      <div>
+        <label class="ul">Focus</label>
+        <input class="ui" type="text" value="Texto activo" style="border-color:var(--blue);">
+      </div>
+      <div>
+        <label class="ul">Error</label>
+        <input class="ui" type="text" value="Valor incorrecto" style="border-color:rgba(239,68,68,.6);">
+        <div class="uf-error">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Este campo es requerido
+        </div>
+      </div>
+      <div>
+        <label class="ul" style="opacity:.4;">Disabled</label>
+        <input class="ui" type="text" placeholder="No disponible" disabled style="opacity:.35;cursor:not-allowed;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BANNERS -->
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">04</span><h2 class="sec-t">Banners &<br><em>Módulos de Contenido</em></h2></div>
+  <h3>Banner de CTA principal</h3>
+  <div class="banner-cta">
+    <div class="banner-cta-body">
+      <div class="banner-cta-ey">Próximo paso</div>
+      <div class="banner-cta-title">Agende su sesión estratégica.</div>
+      <div class="banner-cta-sub">45 minutos. Sin costo. Diagnosticamos juntos el mayor freno de crecimiento de su organización.</div>
+    </div>
+    <div>
+      <a class="btn bp blg">Agendar ahora →</a>
+    </div>
+  </div>
+
+  <h3>Banner de información / highlight</h3>
+  <div class="banner-info">
+    <div class="bi-ey">Nota importante</div>
+    <div class="bi-text">Stratika trabaja con un número limitado de clientes simultáneos para garantizar dedicación completa. La sesión estratégica inicial no implica ningún compromiso comercial.</div>
+  </div>
+
+  <h3>Módulo de proceso horizontal</h3>
+  <div class="demo">
+    <div class="demo-lbl">Componente — Proceso paso a paso</div>
+    <div class="demo-body" style="padding:0;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);">
+        <div style="background:var(--black);padding:24px;">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;margin-bottom:10px;">PASO 01</div>
+          <div style="font-size:14px;font-weight:700;color:var(--light);margin-bottom:6px;">Solicitud</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">Completa el formulario o escríbenos directamente.</div>
+        </div>
+        <div style="background:var(--s2);padding:24px;border-top:2px solid var(--cyan);">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:2px;margin-bottom:10px;">PASO 02</div>
+          <div style="font-size:14px;font-weight:700;color:var(--light);margin-bottom:6px;">Sesión inicial</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">45 minutos de diagnóstico estratégico sin costo.</div>
+        </div>
+        <div style="background:var(--black);padding:24px;">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;margin-bottom:10px;">PASO 03</div>
+          <div style="font-size:14px;font-weight:700;color:var(--light);margin-bottom:6px;">Propuesta</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">Recibe una propuesta clara y accionable en 5 días hábiles.</div>
+        </div>
+        <div style="background:var(--black);padding:24px;">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;margin-bottom:10px;">PASO 04</div>
+          <div style="font-size:14px;font-weight:700;color:var(--light);margin-bottom:6px;">Inicio del proyecto</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.5;">Arrancamos con la fase que más le urge a su organización.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BADGES -->
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">05</span><h2 class="sec-t">Badges, Tags<br><em>& Elementos de Estado</em></h2></div>
+  <div class="badges-demo">
+    <span class="badge badge-b">Estrategia</span>
+    <span class="badge badge-c">Metodología</span>
+    <span class="badge badge-i">IA Corporativa</span>
+    <span class="badge badge-m">Documento</span>
+    <span class="badge badge-s">Activo</span>
+    <span class="badge badge-e">Urgente</span>
+    <span class="badge badge-b">Eje 01</span>
+    <span class="badge badge-c">Eje 02</span>
+    <span class="badge badge-i">Eje 03</span>
+  </div>
+
+  <h3>Barras de progreso</h3>
+  <div class="progress-demo">
+    <div class="prog-item">
+      <div class="prog-hd"><span class="prog-label">Habilitación Estratégica</span><span class="prog-val">78%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:78%;background:var(--blue);"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-hd"><span class="prog-label">Innovación Organizacional</span><span class="prog-val">55%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:55%;background:var(--cyan);"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-hd"><span class="prog-label">Transformación Digital e IA</span><span class="prog-val">32%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:32%;background:var(--indigo);"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">06</span><h2 class="sec-t">Especificaciones<br><em>Técnicas de Componentes</em></h2></div>
+  <table>
+    <tr><th>Componente</th><th>Propiedad</th><th>Valor</th></tr>
+    <tr><td><strong>Botones</strong></td><td>border-radius</td><td>0px</td></tr>
+    <tr><td></td><td>font-family</td><td>IBM Plex Mono, 500, UPPERCASE</td></tr>
+    <tr><td></td><td>letter-spacing</td><td>1.5px</td></tr>
+    <tr><td></td><td>padding (normal)</td><td>11px 24px</td></tr>
+    <tr><td></td><td>transition</td><td>opacity 150ms ease-out</td></tr>
+    <tr><td><strong>Cards</strong></td><td>border-radius</td><td>0px</td></tr>
+    <tr><td></td><td>border-top (activa)</td><td>2px solid acento</td></tr>
+    <tr><td></td><td>hover background</td><td>#1F2933, transition 200ms</td></tr>
+    <tr><td></td><td>padding</td><td>24px</td></tr>
+    <tr><td><strong>Inputs</strong></td><td>border-radius</td><td>0px</td></tr>
+    <tr><td></td><td>border (default)</td><td>1px solid rgba(167,176,188,0.25)</td></tr>
+    <tr><td></td><td>border (focus)</td><td>1px solid #3B82F6</td></tr>
+    <tr><td></td><td>background</td><td>#0B1117</td></tr>
+    <tr><td></td><td>padding</td><td>11px 16px</td></tr>
+    <tr><td><strong>Badges</strong></td><td>font-family</td><td>IBM Plex Mono 500, UPPERCASE</td></tr>
+    <tr><td></td><td>font-size</td><td>10px</td></tr>
+    <tr><td></td><td>letter-spacing</td><td>1.5px</td></tr>
+    <tr><td></td><td>padding</td><td>4px 12px</td></tr>
+    <tr><td></td><td>border-radius</td><td>0px</td></tr>
+  </table>
+</section>
+
+</div>
+<div class="footer">
+  <div class="f-logo">Stratika<span>.</span></div>
+  <div class="f-doc">Componentes UI · v1.0 · 2025 · Confidencial</div>
+</div>
+</body>
+</html>

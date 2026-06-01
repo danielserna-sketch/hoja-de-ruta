@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lineamientos Web — Stratika.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{--black:#050608;--deep:#0B1117;--surface:#1F2933;--s2:#161D25;--muted:#A7B0BC;--light:#F5F7FA;--blue:#3B82F6;--cyan:#22D3EE;--indigo:#6366F1;--border:rgba(167,176,188,0.12);--borderb:rgba(167,176,188,0.25);--font:'Plus Jakarta Sans',sans-serif;--mono:'IBM Plex Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--black);color:var(--light);-webkit-font-smoothing:antialiased}
+.hdr{background:var(--deep);border-bottom:1px solid var(--border);padding:28px 8%;display:flex;justify-content:space-between;align-items:center}
+.hdr-logo{font-size:20px;font-weight:800;letter-spacing:-.5px}.hdr-logo span{color:var(--blue)}
+.hdr-meta{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;opacity:.6}
+.hero{padding:72px 8% 56px;background:var(--black);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:64px 64px}
+.hero::after{content:'';position:absolute;top:-150px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.1) 0%,transparent 65%);pointer-events:none}
+.hero-ey{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;position:relative}
+.hero-ey::before{content:'';width:24px;height:1px;background:var(--cyan)}
+.hero-title{font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-2px;line-height:.95;margin-bottom:20px;position:relative}
+.hero-title em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:14px;color:var(--muted);max-width:500px;line-height:1.7;position:relative}
+.wrap{max-width:1200px;margin:0 auto;padding:0 8%}
+.section{padding:64px 0;border-bottom:1px solid var(--border)}
+.sec-hd{display:flex;align-items:baseline;gap:16px;margin-bottom:40px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;opacity:.6}
+.sec-t{font-size:clamp(22px,2.8vw,32px);font-weight:800;letter-spacing:-1px;line-height:1.1}
+.sec-t em{font-style:normal;color:var(--cyan)}
+h3{font-size:15px;font-weight:700;color:var(--light);margin:36px 0 14px}
+h3:first-child{margin-top:0}
+p{color:var(--muted);font-size:14px;line-height:1.75;margin-bottom:12px}
+p strong{color:var(--light);font-weight:600}
+.grid{display:grid;gap:1px;background:var(--border);margin:24px 0}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--deep);padding:24px}
+.card::before{content:'';display:block;height:2px;margin-bottom:16px;background:var(--surface)}
+.cb::before{background:var(--blue)}.cc::before{background:var(--cyan)}.ci::before{background:var(--indigo)}
+.c-icon{width:28px;height:28px;margin-bottom:12px}
+.cb .c-icon{color:var(--blue)}.cc .c-icon{color:var(--cyan)}.ci .c-icon{color:var(--indigo)}
+.c-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--light);margin-bottom:10px}
+.card p{font-size:13px;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{background:var(--surface);font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);padding:11px 16px;text-align:left;border-bottom:1px solid var(--borderb)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top;line-height:1.55}
+td strong{color:var(--light)}
+.hl{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--blue);padding:24px 28px;margin:20px 0}
+.hl.hc{border-left-color:var(--cyan)}.hl.hi{border-left-color:var(--indigo)}
+.hl-l{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.hl p{color:rgba(245,247,250,.82);font-size:13px;margin:0}
+.sl{list-style:none;margin:16px 0}
+.sl li{padding:10px 0 10px 22px;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);position:relative;line-height:1.6}
+.sl li:first-child{border-top:1px solid var(--border)}
+.sl li::before{content:'›';position:absolute;left:0;color:var(--blue);font-size:16px;line-height:1.5}
+.sl li strong{color:var(--light)}
+
+/* DEMO WRAPPER */
+.demo{border:1px solid var(--border);background:var(--s2);margin:24px 0;overflow:hidden}
+.demo-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--deep);opacity:.7}
+
+/* NAVBAR DEMO */
+.d-nav{background:rgba(5,6,8,.97);border-bottom:1px solid var(--border);padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.d-nav-logo{font-weight:800;font-size:17px;color:var(--light);letter-spacing:-.5px}
+.d-nav-logo span{color:var(--blue)}
+.d-nav-links{display:flex;gap:28px}
+.d-nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:color .15s}
+.d-nav-links a:hover{color:var(--light)}
+.d-nav-cta{background:var(--blue);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:9px 20px;border:none;cursor:pointer}
+
+/* HERO DEMO */
+.d-hero{background:var(--black);padding:56px 48px;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;position:relative;overflow:hidden}
+.d-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.d-hero::after{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(99,102,241,.1) 0%,transparent 65%);pointer-events:none}
+.dh-ey{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;position:relative}
+.dh-ey::before{content:'';width:20px;height:1px;background:var(--cyan)}
+.dh-t{font-size:32px;font-weight:800;color:var(--light);line-height:1.05;letter-spacing:-1.5px;margin-bottom:14px;position:relative}
+.dh-t em{font-style:normal;color:var(--blue)}
+.dh-tx{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px;position:relative}
+.dh-btns{display:flex;gap:12px;position:relative}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:11px 22px;cursor:pointer;border:none;text-decoration:none}
+.bp{background:var(--blue);color:#fff}
+.bo{background:transparent;color:var(--light);border:1px solid var(--borderb)}
+.bc{background:var(--cyan);color:var(--black)}
+.bi{background:var(--indigo);color:#fff}
+.dh-vis{background:var(--s2);border:1px solid var(--border);height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.dh-vis-txt{font-weight:800;font-size:40px;letter-spacing:-2px;color:rgba(245,247,250,.04)}
+.dh-vis-line{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+
+/* METHOD STRIP */
+.method-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.mi{background:var(--black);padding:32px 28px}
+.mi.ma{background:var(--s2);border-top:2px solid var(--cyan)}
+.mi-n{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;margin-bottom:12px}
+.mi-name{font-size:20px;font-weight:800;color:var(--light);letter-spacing:-.5px;margin-bottom:8px}
+.mi.ma .mi-name{color:var(--cyan)}
+.mi-d{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* SITE MAP */
+.sitemap{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin:24px 0}
+.sm-item{background:var(--deep);padding:20px}
+.sm-item.primary{border-top:2px solid var(--blue)}
+.sm-item.secondary{border-top:2px solid var(--cyan)}
+.sm-num{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;margin-bottom:8px}
+.sm-item.secondary .sm-num{color:var(--cyan)}
+.sm-name{font-size:14px;font-weight:700;color:var(--light);margin-bottom:6px}
+.sm-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* SECTION PATTERN DEMOS */
+.pattern-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:24px 0}
+.pat-item{padding:24px 20px;display:flex;flex-direction:column;justify-content:flex-end;min-height:100px;position:relative}
+.pat-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.5;margin-bottom:6px}
+.pat-hex{font-family:var(--mono);font-size:11px;opacity:.7}
+
+.footer{background:var(--deep);border-top:1px solid var(--border);padding:24px 8%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.f-logo{font-size:15px;font-weight:800;letter-spacing:-.3px}.f-logo span{color:var(--blue)}
+.f-doc{font-family:var(--mono);font-size:10px;color:var(--muted);opacity:.4;letter-spacing:2px}
+@media(max-width:768px){.g2,.g3,.sitemap,.pattern-row{grid-template-columns:1fr 1fr}.d-hero{grid-template-columns:1fr}.method-strip{grid-template-columns:1fr}.d-nav-links{display:none}.section{padding:48px 0}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">Stratika<span>.</span></div>
+  <div class="hdr-meta">Lineamientos Web · Digital 01</div>
+</div>
+<div class="hero">
+  <div class="hero-ey">Aplicación Digital — Sitio Web</div>
+  <h1 class="hero-title">Lineamientos Web &<br><em>Estructura del Sitio</em></h1>
+  <p class="hero-sub">Estructura de páginas, propósito del sitio, demos de componentes principales, lineamientos de UI y reglas de experiencia de usuario.</p>
+</div>
+<div class="wrap">
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">01</span><h2 class="sec-t">Propósito &<br><em>Principios del Sitio</em></h2></div>
+  <div class="hl hc">
+    <div class="hl-l">Propósito del sitio web</div>
+    <p>El sitio de Stratika cumple tres funciones en orden de prioridad: (1) <strong>validar credibilidad</strong> ante un prospecto que ya buscó o fue referido, (2) <strong>comunicar el posicionamiento único</strong> Estrategia + IA de forma inmediata y memorable, y (3) <strong>generar conversión</strong> hacia la primera sesión estratégica. No es un catálogo de servicios — es una pieza de posicionamiento ejecutivo.</p>
+  </div>
+  <div class="grid g3">
+    <div class="card cb">
+      <svg class="c-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="c-t">Validar credibilidad</div>
+      <p>El visitante ya sabe de Stratika. El sitio confirma que la firma es lo que promete: metodología clara, posicionamiento específico, lenguaje ejecutivo.</p>
+    </div>
+    <div class="card cc">
+      <svg class="c-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <div class="c-t">Comunicar posicionamiento</div>
+      <p>En los primeros 5 segundos debe quedar claro: qué hace Stratika, para quién, y por qué es diferente de una firma de TI o una consultora tradicional.</p>
+    </div>
+    <div class="card ci">
+      <svg class="c-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <div class="c-t">Generar conversión</div>
+      <p>La única conversión que importa es la sesión estratégica. Todo el sitio debe apuntar a ese CTA sin fricciones de precio, sin formularios largos, sin barreras.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">02</span><h2 class="sec-t">Estructura de Páginas<br><em>Recomendada</em></h2></div>
+  <div class="sitemap">
+    <div class="sm-item primary"><div class="sm-num">01 · PRINCIPAL</div><div class="sm-name">Home</div><div class="sm-desc">Hero, propuesta de valor, 3 ejes, metodología síntesis, CTA principal</div></div>
+    <div class="sm-item primary"><div class="sm-num">02 · PRINCIPAL</div><div class="sm-name">Metodología</div><div class="sm-desc">Fases Entender→Definir→Ejecutar en detalle, proceso de trabajo, entregables por fase</div></div>
+    <div class="sm-item primary"><div class="sm-num">03 · PRINCIPAL</div><div class="sm-name">Ejes de Intervención</div><div class="sm-desc">Cada eje con síntoma → causa → solución Stratika. Sin listar features.</div></div>
+    <div class="sm-item primary"><div class="sm-num">04 · PRINCIPAL</div><div class="sm-name">IA Corporativa</div><div class="sm-desc">IA estratégica vs cosmética, casos de aplicación, cómo Stratika la integra al negocio</div></div>
+    <div class="sm-item secondary"><div class="sm-num">05 · SECUNDARIA</div><div class="sm-name">Sectores</div><div class="sm-desc">Tech, Industria, Salud, Educación — síntomas específicos por sector</div></div>
+    <div class="sm-item secondary"><div class="sm-num">06 · SECUNDARIA</div><div class="sm-name">Perspectivas</div><div class="sm-desc">Artículos sobre estrategia, IA aplicada, liderazgo organizacional. 1–2 por mes.</div></div>
+    <div class="sm-item secondary"><div class="sm-num">07 · CONVERSIÓN</div><div class="sm-name">Sesión Estratégica</div><div class="sm-desc">Formulario directo + qué esperar de la sesión. Sin fricción de precio ni compromisos.</div></div>
+    <div class="sm-item secondary"><div class="sm-num">08 · SOPORTE</div><div class="sm-name">Sobre Stratika</div><div class="sm-desc">Historia, filosofía, forma de trabajar, perfil del equipo fundador</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">03</span><h2 class="sec-t">Componentes Demo —<br><em>Navbar & Hero</em></h2></div>
+  <h3>Navbar principal</h3>
+  <div class="demo">
+    <div class="demo-lbl">Demo — Navegación principal (sticky, backdrop-blur)</div>
+    <div class="d-nav">
+      <div class="d-nav-logo">Stratika<span>.</span></div>
+      <div class="d-nav-links">
+        <a href="#">Intervención</a>
+        <a href="#">IA Corporativa</a>
+        <a href="#">Sectores</a>
+        <a href="#">Perspectivas</a>
+      </div>
+      <button class="d-nav-cta">Agendar Sesión →</button>
+    </div>
+  </div>
+  <h3>Hero principal (Home)</h3>
+  <div class="demo">
+    <div class="demo-lbl">Demo — Hero Section (viewport completo en producción)</div>
+    <div class="d-hero">
+      <div>
+        <div class="dh-ey">Estrategia e Inteligencia Artificial</div>
+        <div class="dh-t">La ventaja del futuro<br>se <em>diseña</em> ahora.</div>
+        <div class="dh-tx">Construya el futuro de su negocio con metodologías de integración estratégica en tecnología, innovación e inteligencia artificial aplicada al negocio.</div>
+        <div class="dh-btns">
+          <a class="btn bp">Agendar Sesión →</a>
+          <a class="btn bo">Ver Metodología</a>
+        </div>
+      </div>
+      <div class="dh-vis">
+        <div class="dh-vis-txt">STRATIKA.</div>
+        <div class="dh-vis-line"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">04</span><h2 class="sec-t">Componente Demo —<br><em>Módulo de Metodología</em></h2></div>
+  <div class="demo">
+    <div class="demo-lbl">Demo — Sección Metodología (Home y página dedicada)</div>
+    <div class="method-strip">
+      <div class="mi">
+        <div class="mi-n">01 — ENTENDER</div>
+        <div class="mi-name">Entender</div>
+        <div class="mi-d">Revelamos riesgos estructurales, ineficiencias ocultas y brechas tecnológicas que limitan el crecimiento de la organización.</div>
+      </div>
+      <div class="mi ma">
+        <div class="mi-n">02 — DEFINIR</div>
+        <div class="mi-name">Definir</div>
+        <div class="mi-d">Diseñamos la hoja de ruta organizacional y tecnológica para ejecutar la estrategia y acelerar resultados de negocio reales.</div>
+      </div>
+      <div class="mi">
+        <div class="mi-n">03 — EJECUTAR</div>
+        <div class="mi-name">Ejecutar</div>
+        <div class="mi-d">Acompañamos decisiones críticas y aseguramos la implementación efectiva que maximiza el retorno y reduce riesgos operativos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">05</span><h2 class="sec-t">Paleta de Secciones<br><em>& Alternancia</em></h2></div>
+  <p>Las secciones del sitio alternan entre tres niveles de oscuridad para crear ritmo visual sin romper la coherencia de la paleta dark. La alternancia debe ser consistente en toda la navegación del sitio.</p>
+  <div class="pattern-row">
+    <div class="pat-item" style="background:#050608;">
+      <div class="pat-label" style="color:#F5F7FA;">Fondo principal</div>
+      <div class="pat-hex" style="color:#F5F7FA;">#050608 — Black</div>
+    </div>
+    <div class="pat-item" style="background:#0B1117;">
+      <div class="pat-label" style="color:#F5F7FA;">Sección alterna</div>
+      <div class="pat-hex" style="color:#F5F7FA;">#0B1117 — Deep</div>
+    </div>
+    <div class="pat-item" style="background:#1F2933;">
+      <div class="pat-label" style="color:#F5F7FA;">Sección de impacto</div>
+      <div class="pat-hex" style="color:#F5F7FA;">#1F2933 — Surface</div>
+    </div>
+  </div>
+  <div class="hl">
+    <div class="hl-l">Regla de alternancia</div>
+    <p>Patrón: <strong>#050608 → #0B1117 → #050608 → #0B1117</strong>. El #1F2933 solo se usa en secciones de máximo contraste o impacto (máximo 1 por página). Nunca fondos blancos en el sitio principal.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">06</span><h2 class="sec-t">Lineamientos de UI<br><em>& Experiencia</em></h2></div>
+  <table>
+    <tr><th>Parámetro</th><th>Especificación</th></tr>
+    <tr><td><strong>Grid</strong></td><td>12 columnas, max-width 1280px, padding horizontal 8% del viewport, gap entre columnas 24px</td></tr>
+    <tr><td><strong>Border-radius</strong></td><td>0px en todos los elementos. Sin excepción.</td></tr>
+    <tr><td><strong>Animaciones</strong></td><td>fade-in + translateY(16px→0) al entrar en viewport. duration: 400ms. easing: ease-out. No usar bounce, spring ni efectos dramáticos.</td></tr>
+    <tr><td><strong>Scroll behavior</strong></td><td>smooth. Navbar sticky con backdrop-filter: blur(12px) y background: rgba(5,6,8,0.95) al hacer scroll.</td></tr>
+    <tr><td><strong>Hover en cards</strong></td><td>background → #1F2933. transition: 200ms ease-out. Sin elevación ni sombra.</td></tr>
+    <tr><td><strong>Focus de inputs</strong></td><td>border-color → #3B82F6. outline: none. Sin box-shadow.</td></tr>
+    <tr><td><strong>Tipografía en web</strong></td><td>Plus Jakarta Sans via Google Fonts. IBM Plex Mono via Google Fonts. Preconnect a fonts.googleapis.com.</td></tr>
+    <tr><td><strong>Imágenes</strong></td><td>Formato WebP preferido. Lazy loading en imágenes fuera del viewport. Alt text siempre presente.</td></tr>
+    <tr><td><strong>Performance</strong></td><td>LCP < 2.5s objetivo. Sin carruseles automáticos. Sin videos de autoplay. Sin fuentes > 2 familias.</td></tr>
+    <tr><td><strong>Responsive breakpoints</strong></td><td>Mobile: 0–640px. Tablet: 641–960px. Desktop: 961px+. Mobile-first en desarrollo.</td></tr>
+    <tr><td><strong>Cursor personalizado</strong></td><td>Considerar cursor custom (dot 6px en #3B82F6) en desktop para reforzar identidad de marca.</td></tr>
+    <tr><td><strong>Favicon</strong></td><td>"S." (S + punto) en Plus Jakarta Sans 800 sobre fondo #050608. 16×16, 32×32, 48×48, 192×192, 512×512.</td></tr>
+  </table>
+  <h3>Reglas de contenido web</h3>
+  <ul class="sl">
+    <li><strong>Sin carruseles automáticos:</strong> Los carruseles automáticos reducen atención y confianza. Usar tabs estáticos o grids para testimonios y casos.</li>
+    <li><strong>Sin popups de suscripción:</strong> No interrumpir la navegación con modales de captura de email en los primeros 30 segundos.</li>
+    <li><strong>CTA único por sección:</strong> Cada sección tiene un solo call-to-action visible. No competir entre múltiples CTAs en la misma pantalla.</li>
+    <li><strong>Sin precios en el sitio:</strong> El precio se discute en la sesión estratégica. No publicar tarifas ni paquetes en el sitio principal.</li>
+    <li><strong>Formulario simplificado:</strong> El formulario de contacto máximo 4 campos: nombre, empresa, cargo, desafío principal. Sin teléfono obligatorio.</li>
+  </ul>
+</section>
+
+</div>
+<div class="footer">
+  <div class="f-logo">Stratika<span>.</span></div>
+  <div class="f-doc">Lineamientos Web · v1.0 · 2025 · Confidencial</div>
+</div>
+</body>
+</html>

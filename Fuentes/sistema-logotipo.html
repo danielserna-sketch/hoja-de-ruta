@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Logotipo — Stratika.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{--black:#050608;--deep:#0B1117;--surface:#1F2933;--s2:#161D25;--muted:#A7B0BC;--light:#F5F7FA;--blue:#3B82F6;--cyan:#22D3EE;--indigo:#6366F1;--border:rgba(167,176,188,0.12);--borderb:rgba(167,176,188,0.25);--font:'Plus Jakarta Sans',sans-serif;--mono:'IBM Plex Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--black);color:var(--light);-webkit-font-smoothing:antialiased}
+.hdr{background:var(--deep);border-bottom:1px solid var(--border);padding:28px 8%;display:flex;justify-content:space-between;align-items:center}
+.hdr-logo{font-size:20px;font-weight:800;letter-spacing:-.5px}.hdr-logo span{color:var(--blue)}
+.hdr-meta{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;opacity:.6}
+.hero{padding:72px 8% 56px;background:var(--black);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:64px 64px}
+.hero-ey{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;position:relative}
+.hero-ey::before{content:'';width:24px;height:1px;background:var(--cyan)}
+.hero-title{font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-2px;line-height:.95;margin-bottom:20px;position:relative}
+.hero-title em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:14px;color:var(--muted);max-width:500px;line-height:1.7;position:relative}
+.wrap{max-width:1200px;margin:0 auto;padding:0 8%}
+.section{padding:64px 0;border-bottom:1px solid var(--border)}
+.sec-hd{display:flex;align-items:baseline;gap:16px;margin-bottom:40px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:2px;opacity:.6}
+.sec-t{font-size:clamp(22px,2.8vw,32px);font-weight:800;letter-spacing:-1px;line-height:1.1}
+.sec-t em{font-style:normal;color:var(--cyan)}
+h3{font-size:15px;font-weight:700;color:var(--light);margin:36px 0 14px}
+h3:first-child{margin-top:0}
+p{color:var(--muted);font-size:14px;line-height:1.75;margin-bottom:12px}
+p:last-child{margin-bottom:0}
+p strong{color:var(--light);font-weight:600}
+
+/* LOGO SHOWCASE */
+.logo-showcase{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);margin:24px 0}
+.logo-box{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:48px;min-height:180px;position:relative}
+.logo-box.bg-black{background:#050608}
+.logo-box.bg-deep{background:#0B1117}
+.logo-box.bg-surf{background:#1F2933}
+.logo-box.bg-white{background:#F5F7FA}
+.logo-wordmark{font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-1px;line-height:1}
+.bg-black .logo-wordmark,.bg-deep .logo-wordmark,.bg-surf .logo-wordmark{color:#F5F7FA}
+.bg-white .logo-wordmark{color:#050608}
+.logo-box-meta{display:flex;justify-content:space-between;align-items:flex-end;width:100%}
+.logo-box-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.45}
+.bg-black .logo-box-label,.bg-deep .logo-box-label,.bg-surf .logo-box-label{color:#F5F7FA}
+.bg-white .logo-box-label{color:#050608}
+.logo-box-hex{font-family:var(--mono);font-size:10px;opacity:.35}
+.bg-black .logo-box-hex,.bg-deep .logo-box-hex,.bg-surf .logo-box-hex{color:#F5F7FA}
+.bg-white .logo-box-hex{color:#050608}
+
+/* LOGO BLUE VARIANT */
+.logo-box.bg-blue-v{background:#050608;border:1px solid rgba(59,130,246,.3)}
+.bg-blue-v .logo-wordmark{color:#3B82F6}
+.bg-blue-v .logo-box-label{color:#3B82F6;opacity:.5}
+.bg-blue-v .logo-box-hex{color:#3B82F6;opacity:.35}
+
+/* CLEAR SPACE */
+.clearspace-demo{background:var(--s2);border:1px solid var(--border);padding:48px;margin:24px 0;display:flex;flex-direction:column;align-items:center;gap:32px}
+.cs-inner{position:relative;display:inline-block}
+.cs-logo{font-size:48px;font-weight:800;letter-spacing:-1.5px;color:var(--light);position:relative;z-index:2}
+.cs-zone{position:absolute;inset:-24px;border:1px dashed rgba(34,211,238,.4);z-index:1}
+.cs-arrows{position:absolute;inset:-24px;z-index:3}
+.cs-label{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;text-align:center;opacity:.8}
+.cs-sub{font-size:12px;color:var(--muted);text-align:center;max-width:400px;line-height:1.6}
+
+/* SIZE SCALE */
+.size-scale{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin:24px 0}
+.size-item{background:var(--deep);padding:24px;display:flex;flex-direction:column;gap:16px}
+.size-logo{font-weight:800;letter-spacing:-.5px;color:var(--light);line-height:1}
+.size-spec{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;opacity:.6}
+.size-use{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* MISUSE */
+.misuse-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:24px 0}
+.misuse-item{background:var(--deep);padding:28px;position:relative}
+.misuse-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:rgba(239,68,68,.6)}
+.misuse-logo-wrap{height:80px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;background:var(--s2);position:relative}
+.misuse-x{position:absolute;top:8px;right:8px;width:20px;height:20px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);display:flex;align-items:center;justify-content:center}
+.misuse-x svg{width:12px;height:12px;stroke:#ef4444;stroke-width:2}
+.misuse-label{font-family:var(--mono);font-size:10px;font-weight:500;color:rgba(239,68,68,.8);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.misuse-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* FAVICON */
+.favicon-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin:24px 0}
+.fav-item{display:flex;flex-direction:column;align-items:center;gap:10px}
+.fav-box{background:#050608;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--light);letter-spacing:-.5px}
+.fav-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1.5px;text-align:center;opacity:.6}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{background:var(--surface);font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);padding:11px 16px;text-align:left;border-bottom:1px solid var(--borderb)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top;line-height:1.55}
+td strong{color:var(--light)}
+tr:last-child td{border-bottom:1px solid var(--borderb)}
+
+/* HL */
+.hl{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--blue);padding:24px 28px;margin:20px 0}
+.hl.hc{border-left-color:var(--cyan)}
+.hl-l{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.hl p{color:rgba(245,247,250,.82);font-size:13px;margin:0}
+
+.footer{background:var(--deep);border-top:1px solid var(--border);padding:24px 8%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.f-logo{font-size:15px;font-weight:800;color:var(--light);letter-spacing:-.3px}
+.f-logo span{color:var(--blue)}
+.f-doc{font-family:var(--mono);font-size:10px;color:var(--muted);opacity:.4;letter-spacing:2px}
+@media(max-width:768px){.logo-showcase,.size-scale,.misuse-grid{grid-template-columns:1fr 1fr}.section{padding:48px 0}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">Stratika<span>.</span></div>
+  <div class="hdr-meta">Sistema de Logotipo · Identidad Visual 01</div>
+</div>
+<div class="hero">
+  <div class="hero-ey">Identidad Visual — Logotipo</div>
+  <h1 class="hero-title">Sistema de<br><em>Logotipo</em></h1>
+  <p class="hero-sub">Variantes oficiales, zona de protección, escala mínima, usos incorrectos y aplicaciones del wordmark "Stratika." en todos sus contextos.</p>
+</div>
+<div class="wrap">
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">01</span><h2 class="sec-t">Concepto &<br><em>Variantes Oficiales</em></h2></div>
+  <div class="hl hc">
+    <div class="hl-l">Concepto del logotipo</div>
+    <p>El logotipo de Stratika es un <strong>wordmark puro</strong>: "Stratika." en tipografía sans-serif bold de alta legibilidad. El <strong>punto final es el elemento de firma</strong> — semántico, no decorativo. Comunica conclusión, precisión y carácter ejecutivo. No existe ni debe inventarse ningún isotipo, ícono o símbolo adicional. El wordmark es suficientemente fuerte y versátil por sí solo.</p>
+  </div>
+  <div class="logo-showcase">
+    <div class="logo-box bg-black">
+      <div class="logo-wordmark">Stratika.</div>
+      <div class="logo-box-meta">
+        <div class="logo-box-label">Variante Principal</div>
+        <div class="logo-box-hex">#F5F7FA / #050608</div>
+      </div>
+    </div>
+    <div class="logo-box bg-deep">
+      <div class="logo-wordmark">Stratika.</div>
+      <div class="logo-box-meta">
+        <div class="logo-box-label">Variante Deep</div>
+        <div class="logo-box-hex">#F5F7FA / #0B1117</div>
+      </div>
+    </div>
+    <div class="logo-box bg-surf">
+      <div class="logo-wordmark">Stratika.</div>
+      <div class="logo-box-meta">
+        <div class="logo-box-label">Variante Surface</div>
+        <div class="logo-box-hex">#F5F7FA / #1F2933</div>
+      </div>
+    </div>
+    <div class="logo-box bg-white">
+      <div class="logo-wordmark">Stratika.</div>
+      <div class="logo-box-meta">
+        <div class="logo-box-label">Variante Clara</div>
+        <div class="logo-box-hex">#050608 / #F5F7FA</div>
+      </div>
+    </div>
+  </div>
+  <div class="logo-box bg-blue-v" style="min-height:140px;margin-top:1px;">
+    <div class="logo-wordmark">Stratika.</div>
+    <div class="logo-box-meta">
+      <div class="logo-box-label">Variante Azul — solo para portadas de documento especiales</div>
+      <div class="logo-box-hex">#3B82F6 / #050608</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">02</span><h2 class="sec-t">Zona de Protección<br><em>& Escala Mínima</em></h2></div>
+  <div class="clearspace-demo">
+    <div class="cs-inner">
+      <div class="cs-logo">Stratika.</div>
+      <div class="cs-zone"></div>
+    </div>
+    <div class="cs-label">Zona de protección = altura de la "S"</div>
+    <div class="cs-sub">El espacio libre mínimo alrededor del wordmark debe ser equivalente a la altura de la letra "S" en todos los bordes. Ningún elemento gráfico, texto ni borde puede invadir esta zona.</div>
+  </div>
+  <h3>Escala mínima de uso</h3>
+  <div class="size-scale">
+    <div class="size-item">
+      <div class="size-logo" style="font-size:40px;">Stratika.</div>
+      <div class="size-spec">DESKTOP WEB</div>
+      <div class="size-use">Navbar, headers, presentaciones. Tamaño recomendado: 160–220px ancho.</div>
+    </div>
+    <div class="size-item">
+      <div class="size-logo" style="font-size:28px;">Stratika.</div>
+      <div class="size-spec">MOBILE / TABLET</div>
+      <div class="size-use">Navbar mobile, documentos. Mínimo recomendado: 110px ancho.</div>
+    </div>
+    <div class="size-item">
+      <div class="size-logo" style="font-size:18px;">Stratika.</div>
+      <div class="size-spec">TAMAÑO MÍNIMO DIGITAL</div>
+      <div class="size-use">80px de ancho mínimo absoluto en pantalla. Por debajo usar solo "S."</div>
+    </div>
+    <div class="size-item">
+      <div class="size-logo" style="font-size:13px;">Stratika.</div>
+      <div class="size-spec">TAMAÑO MÍNIMO IMPRESO</div>
+      <div class="size-use">22mm de ancho mínimo en impresión. Pie de página, sellos, etc.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">03</span><h2 class="sec-t">Favicon &<br><em>Ícono de Aplicación</em></h2></div>
+  <p>Cuando el espacio no permite el wordmark completo (favicon, ícono de app, avatar), se usa la abreviatura <strong>"S."</strong> — la inicial más el punto de firma — sobre fondo negro #050608. Esta es la única reducción permitida del logotipo.</p>
+  <div class="favicon-row">
+    <div class="fav-item">
+      <div class="fav-box" style="width:64px;height:64px;font-size:24px;">S.</div>
+      <div class="fav-label">64 × 64px</div>
+    </div>
+    <div class="fav-item">
+      <div class="fav-box" style="width:48px;height:48px;font-size:18px;">S.</div>
+      <div class="fav-label">48 × 48px</div>
+    </div>
+    <div class="fav-item">
+      <div class="fav-box" style="width:32px;height:32px;font-size:13px;">S.</div>
+      <div class="fav-label">32 × 32px</div>
+    </div>
+    <div class="fav-item">
+      <div class="fav-box" style="width:24px;height:24px;font-size:10px;">S.</div>
+      <div class="fav-label">24 × 24px</div>
+    </div>
+    <div class="fav-item">
+      <div class="fav-box" style="width:16px;height:16px;font-size:7px;">S.</div>
+      <div class="fav-label">16 × 16px</div>
+    </div>
+    <div class="fav-item">
+      <div class="fav-box" style="width:400px;height:64px;font-size:26px;border-radius:0;max-width:100%;">Stratika.</div>
+      <div class="fav-label">Cover LinkedIn · 1128 × 191px (referencia)</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">04</span><h2 class="sec-t">Usos Incorrectos<br><em>del Logotipo</em></h2></div>
+  <div class="misuse-grid">
+    <div class="misuse-item">
+      <div class="misuse-logo-wrap">
+        <span style="font-size:28px;font-weight:800;color:#3B82F6;letter-spacing:-1px;background:linear-gradient(90deg,#3B82F6,#22D3EE);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Stratika.</span>
+        <div class="misuse-x"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></div>
+      </div>
+      <div class="misuse-label">No usar gradientes</div>
+      <div class="misuse-desc">El logo nunca lleva degradados, efectos de brillo ni transiciones de color dentro del texto.</div>
+    </div>
+    <div class="misuse-item">
+      <div class="misuse-logo-wrap">
+        <span style="font-size:28px;font-weight:800;color:var(--light);letter-spacing:-1px;text-shadow:0 0 20px rgba(59,130,246,.8),0 0 40px rgba(34,211,238,.4);">Stratika.</span>
+        <div class="misuse-x"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></div>
+      </div>
+      <div class="misuse-label">No usar glow / sombras</div>
+      <div class="misuse-desc">Ningún tipo de sombra, text-shadow, glow ni efecto de brillo sobre el wordmark.</div>
+    </div>
+    <div class="misuse-item">
+      <div class="misuse-logo-wrap">
+        <span style="font-size:28px;font-weight:800;color:var(--light);letter-spacing:-1px;transform:skewX(-10deg);display:inline-block;">Stratika.</span>
+        <div class="misuse-x"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></div>
+      </div>
+      <div class="misuse-label">No distorsionar</div>
+      <div class="misuse-desc">No rotar, inclinar, estirar ni comprimir el wordmark en ninguna dirección.</div>
+    </div>
+    <div class="misuse-item">
+      <div class="misuse-logo-wrap">
+        <span style="font-size:28px;font-weight:800;color:var(--light);letter-spacing:-1px;-webkit-text-stroke:1.5px var(--cyan);color:transparent;">Stratika.</span>
+        <div class="misuse-x"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></div>
+      </div>
+      <div class="misuse-label">No usar outline</div>
+      <div class="misuse-desc">El logo no se aplica como texto outline ni con stroke visible en ningún contexto.</div>
+    </div>
+    <div class="misuse-item">
+      <div class="misuse-logo-wrap" style="background:#3B82F6;">
+        <span style="font-size:28px;font-weight:800;color:var(--light);letter-spacing:-1px;">Stratika.</span>
+        <div class="misuse-x"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></div>
+      </div>
+      <div class="misuse-label">No sobre fondos de color</div>
+      <div class="misuse-desc">El logo solo va sobre los fondos aprobados: negro, deep, surface o blanco. Nunca sobre azul, cyan, indigo ni colores de acento.</div>
+    </div>
+    <div class="misuse-item">
+      <div class="misuse-logo-wrap">
+        <span style="font-size:28px;font-weight:400;color:var(--light);letter-spacing:-1px;">Stratika.</span>
+        <div class="misuse-x"><svg viewBox="0 0 12 12"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></div>
+      </div>
+      <div class="misuse-label">No cambiar el peso</div>
+      <div class="misuse-desc">El wordmark es siempre weight 800 (ExtraBold). No se reproduce en regular, medium ni bold estándar.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sec-hd"><span class="sec-n">05</span><h2 class="sec-t">Especificaciones<br><em>Técnicas</em></h2></div>
+  <table>
+    <tr><th>Parámetro</th><th>Especificación</th></tr>
+    <tr><td><strong>Tipografía del wordmark</strong></td><td>Plus Jakarta Sans, weight 800 (ExtraBold), letter-spacing -0.5px</td></tr>
+    <tr><td><strong>Tamaño mínimo digital</strong></td><td>80px de ancho. Por debajo de 80px usar favicon "S."</td></tr>
+    <tr><td><strong>Tamaño mínimo impresión</strong></td><td>22mm de ancho. Resolución mínima: 300dpi para impresión offset</td></tr>
+    <tr><td><strong>Zona de protección</strong></td><td>= altura de la "S" en todos los bordes (aprox. 0.75× la altura de las mayúsculas)</td></tr>
+    <tr><td><strong>Fondos permitidos</strong></td><td>#050608, #0B1117, #1F2933 → logo blanco (#F5F7FA). #F5F7FA, blanco → logo negro (#050608). Solo con contraste ≥ 4.5:1.</td></tr>
+    <tr><td><strong>Variante azul</strong></td><td>#3B82F6 sobre #050608 únicamente. Solo portadas y slides de portada especiales.</td></tr>
+    <tr><td><strong>Formatos de archivo</strong></td><td>SVG (vectorial, uso preferido), PNG con fondo transparente (retina 2×), PDF (impresión)</td></tr>
+    <tr><td><strong>Punto final</strong></td><td>Elemento obligatorio e inseparable del wordmark. No se omite en ningún caso ni contexto.</td></tr>
+  </table>
+</section>
+
+</div>
+<div class="footer">
+  <div class="f-logo">Stratika<span>.</span></div>
+  <div class="f-doc">Sistema de Logotipo · v1.0 · 2025 · Confidencial</div>
+</div>
+</body>
+</html>

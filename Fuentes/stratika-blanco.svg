@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 90" width="520" height="90">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&amp;display=swap');
+    text { font-family: 'Plus Jakarta Sans', 'Arial Black', Arial, sans-serif; }
+  </style>
+  <!-- Wordmark: Stratika. en blanco -->
+  <text
+    x="8"
+    y="76"
+    font-weight="800"
+    font-size="80"
+    letter-spacing="-2.5"
+    fill="#F5F7FA">Stratika.</text>
+</svg>
