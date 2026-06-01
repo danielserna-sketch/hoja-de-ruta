@@ -926,6 +926,120 @@ table.initiatives-table {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ═══ VIEW TABS ═══ */
+.view-tabs { display:flex; border-bottom:1px solid var(--border); margin-bottom:28px; }
+.view-tab {
+  font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  padding:10px 20px; color:var(--muted); cursor:pointer; border:none; background:none;
+  border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .15s,border-color .15s;
+  display:inline-flex; align-items:center; gap:7px;
+}
+.view-tab:hover { color:var(--light); }
+.view-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+
+/* ═══ GANTT ═══ */
+.gantt-controls { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
+.gantt-zoom-group { display:flex; border:1px solid var(--borderb); }
+.gantt-zoom-btn {
+  font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+  padding:7px 16px; color:var(--muted); background:var(--deep); border:none;
+  border-right:1px solid var(--borderb); cursor:pointer; transition:background .15s,color .15s;
+}
+.gantt-zoom-btn:last-child { border-right:none; }
+.gantt-zoom-btn:hover { background:var(--surface); color:var(--light); }
+.gantt-zoom-btn.active { background:var(--surface); color:var(--cyan); }
+
+.gantt-scroll { overflow-x:auto; border:1px solid var(--border); }
+.gantt-scroll::-webkit-scrollbar { height:6px; }
+.gantt-scroll::-webkit-scrollbar-track { background:var(--deep); }
+.gantt-scroll::-webkit-scrollbar-thumb { background:var(--surface); }
+.gantt-grid { display:grid; }
+
+.gantt-lhdr {
+  position:sticky; left:0; z-index:6; background:var(--surface);
+  border-bottom:1px solid var(--borderb); border-right:1px solid var(--borderb);
+  padding:0 16px; height:52px; display:flex; align-items:center;
+  font-family:var(--mono); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--cyan);
+}
+.gantt-months-row { display:flex; border-bottom:1px solid var(--borderb); background:var(--surface); height:52px; }
+.gantt-mcell {
+  flex-shrink:0; border-right:1px solid var(--border); padding:0 12px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.gantt-mcell-name { font-family:var(--mono); font-size:10px; color:var(--light); letter-spacing:1px; text-transform:uppercase; }
+.gantt-mcell-year { font-family:var(--mono); font-size:9px; color:var(--muted); opacity:.5; }
+
+.gantt-lrow {
+  position:sticky; left:0; z-index:5; background:var(--deep);
+  border-bottom:1px solid var(--border); border-right:1px solid var(--borderb);
+  padding:0 16px; height:52px; display:flex; flex-direction:column; justify-content:center; gap:3px;
+  cursor:pointer; transition:background .15s;
+}
+.gantt-lrow:hover { background:var(--s2); }
+.gantt-lrow-name { font-size:12px; font-weight:600; color:var(--light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:228px; }
+.gantt-lrow-resp { font-family:var(--mono); font-size:10px; color:var(--muted); opacity:.7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:228px; }
+
+.gantt-brow {
+  position:relative; height:52px; border-bottom:1px solid var(--border);
+  background:var(--deep); overflow:hidden; transition:background .15s;
+}
+.gantt-brow:hover { background:var(--s2); }
+.gantt-vline { position:absolute; top:0; bottom:0; width:1px; background:rgba(167,176,188,.07); pointer-events:none; }
+.gantt-today-line { position:absolute; top:0; bottom:0; width:1px; background:var(--cyan); opacity:.8; pointer-events:none; z-index:3; }
+.gantt-today-lbl {
+  position:absolute; top:0; transform:translateX(-50%);
+  font-family:var(--mono); font-size:9px; color:var(--cyan); letter-spacing:1px;
+  background:var(--surface); padding:2px 6px; white-space:nowrap; pointer-events:none;
+}
+
+.gantt-bar {
+  position:absolute; top:50%; transform:translateY(-50%); height:26px;
+  display:flex; align-items:center; overflow:hidden; cursor:pointer;
+  transition:opacity .15s,filter .15s; min-width:6px;
+}
+.gantt-bar:hover { opacity:.85; filter:brightness(1.15); }
+.gantt-bfill { position:absolute; left:0; top:0; bottom:0; opacity:.28; pointer-events:none; }
+.gantt-blbl {
+  position:relative; font-family:var(--mono); font-size:10px; font-weight:500;
+  letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  padding:0 8px; z-index:1; max-width:100%;
+}
+.gantt-pdots { position:absolute; bottom:3px; right:4px; display:flex; gap:2px; z-index:2; }
+.gantt-pdot { width:5px; height:5px; flex-shrink:0; }
+
+.gbar-not-started { background:rgba(167,176,188,.14); border-left:2px solid rgba(167,176,188,.35); }
+.gbar-not-started .gantt-blbl { color:var(--muted); }
+.gbar-not-started .gantt-bfill { background:rgba(167,176,188,.5); }
+.gbar-in-progress { background:rgba(59,130,246,.18); border-left:2px solid var(--blue); }
+.gbar-in-progress .gantt-blbl { color:#c8d8ff; }
+.gbar-in-progress .gantt-bfill { background:var(--blue); }
+.gbar-at-risk { background:rgba(249,115,22,.16); border-left:2px solid var(--orange); }
+.gbar-at-risk .gantt-blbl { color:#ffd4a8; }
+.gbar-at-risk .gantt-bfill { background:var(--orange); }
+.gbar-completed { background:rgba(34,197,94,.14); border-left:2px solid var(--green); }
+.gbar-completed .gantt-blbl { color:#a7f3c2; }
+.gbar-completed .gantt-bfill { background:var(--green); }
+
+.gantt-nd-wrap { border-top:1px solid var(--borderb); background:var(--black); }
+.gantt-nd-hdr {
+  padding:10px 16px; font-family:var(--mono); font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); opacity:.5;
+  display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border);
+}
+.gantt-nd-row { display:flex; height:44px; border-bottom:1px solid var(--border); }
+.gantt-nd-lbl {
+  width:260px; flex-shrink:0; padding:0 16px; border-right:1px solid var(--borderb);
+  display:flex; flex-direction:column; justify-content:center; gap:3px;
+  cursor:pointer; transition:background .15s;
+}
+.gantt-nd-lbl:hover { background:var(--s2); }
+.gantt-nd-body { flex:1; padding:0 16px; display:flex; align-items:center; gap:8px; }
+.gantt-nd-tag {
+  font-family:var(--mono); font-size:9px; letter-spacing:1px; text-transform:uppercase;
+  color:var(--muted); opacity:.4; border:1px dashed rgba(167,176,188,.15); padding:3px 10px;
+}
+.gantt-empty { padding:56px; text-align:center; font-size:13px; color:var(--muted); border:1px solid var(--border); background:var(--deep); }
 </style>
 </head>
 <body>
@@ -1057,6 +1171,20 @@ table.initiatives-table {
         </div>
       </div>
 
+      <!-- View Tabs -->
+      <div class="view-tabs">
+        <button class="view-tab active" id="tab-table" onclick="switchDetailTab('table')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Tabla
+        </button>
+        <button class="view-tab" id="tab-gantt" onclick="switchDetailTab('gantt')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="4"/><rect x="3" y="10" width="12" height="4"/><rect x="3" y="16" width="5" height="4"/></svg>
+          Gantt
+        </button>
+      </div>
+
+      <!-- ── TAB: TABLE ── -->
+      <div id="panel-table">
       <!-- Filters & Add Initiative -->
       <div class="filters-bar">
         <div class="filter-group">
@@ -1113,6 +1241,31 @@ table.initiatives-table {
           <tbody id="initiatives-tbody"></tbody>
         </table>
       </div>
+      </div><!-- /panel-table -->
+
+      <!-- ── TAB: GANTT ── -->
+      <div id="panel-gantt" class="hidden">
+        <div class="gantt-controls">
+          <div>
+            <div style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Iniciativas sin fecha quedan al final</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="gantt-zoom-group">
+              <button class="gantt-zoom-btn" id="zoom-month" onclick="setGanttZoom('month')">Mes</button>
+              <button class="gantt-zoom-btn active" id="zoom-quarter" onclick="setGanttZoom('quarter')">Trimestre</button>
+              <button class="gantt-zoom-btn" id="zoom-year" onclick="setGanttZoom('year')">Año</button>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openInitiativeModal()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar Iniciativa
+            </button>
+          </div>
+        </div>
+        <div class="gantt-scroll" id="gantt-scroll">
+          <div id="gantt-root"></div>
+        </div>
+        <div class="gantt-nd-wrap" id="gantt-nodates" style="display:none;"></div>
+      </div><!-- /panel-gantt -->
 
     </div>
   </div>
@@ -1279,6 +1432,12 @@ let confirmCallback = null;
 
 const STORAGE_KEY = 'stratika_plans_v3';
 const SUPABASE_MIGRATION_KEY = 'stratika_supabase_migrated_v1';
+const SUPABASE_SYNC_INTERVAL_MS = 15000;
+
+let supabaseSyncTimer = null;
+let supabaseSyncListening = false;
+let isRemoteSyncInProgress = false;
+let lastRemoteSnapshot = '';
 
 // ═══════════════════════════════════════════════════
 // PERSISTENCE
@@ -1324,6 +1483,86 @@ async function loadData() {
 
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+  lastRemoteSnapshot = plansSnapshot(plans);
+}
+
+function plansSnapshot(sourcePlans) {
+  const normalized = (sourcePlans || [])
+    .map(plan => ({
+      id: plan.id,
+      name: plan.name || '',
+      owner: plan.owner || '',
+      desc: plan.desc || '',
+      createdAt: plan.createdAt || '',
+      initiatives: (plan.initiatives || [])
+        .map(init => ({
+          id: init.id,
+          name: init.name || '',
+          responsible: init.responsible || '',
+          start: init.start || '',
+          end: init.end || '',
+          priority: init.priority || 'medium',
+          status: init.status || 'not-started',
+          progress: typeof init.progress === 'number' ? init.progress : 0,
+          phases: [...(init.phases || [])].sort(),
+        }))
+        .sort((a, b) => String(a.id).localeCompare(String(b.id))),
+    }))
+    .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+
+  return JSON.stringify(normalized);
+}
+
+function refreshCurrentView() {
+  renderDashboard();
+
+  if (!currentPlanId) return;
+
+  const current = getPlan(currentPlanId);
+  if (!current) {
+    showDashboard();
+    return;
+  }
+
+  renderDetailHeader(current);
+  populateResponsibleFilter(current);
+  renderInitiatives();
+  if (currentDetailTab === 'gantt') renderGantt();
+}
+
+async function syncFromSupabaseToLocal(render = true) {
+  if (!window.supabaseClient || isRemoteSyncInProgress) return;
+
+  isRemoteSyncInProgress = true;
+  try {
+    const remote = await fetchPlansFromSupabase();
+    if (!remote.ok) return;
+
+    const mappedRemote = mapRemoteToLocal(remote.plans, remote.initiatives);
+    const remoteSnapshot = plansSnapshot(mappedRemote);
+    if (remoteSnapshot === lastRemoteSnapshot) return;
+
+    plans = mappedRemote;
+    saveData();
+    if (render) refreshCurrentView();
+  } finally {
+    isRemoteSyncInProgress = false;
+  }
+}
+
+function startSupabaseSync() {
+  if (!window.supabaseClient || supabaseSyncTimer) return;
+
+  supabaseSyncTimer = setInterval(() => {
+    syncFromSupabaseToLocal(true);
+  }, SUPABASE_SYNC_INTERVAL_MS);
+
+  if (!supabaseSyncListening) {
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) syncFromSupabaseToLocal(true);
+    });
+    supabaseSyncListening = true;
+  }
 }
 
 async function fetchPlansFromSupabase() {
@@ -1582,6 +1821,13 @@ function showDetail(planId) {
   document.getElementById('filter-priority').value = '';
   document.getElementById('filter-responsible').value = '';
   document.getElementById('search-initiatives').value = '';
+
+  // Reset to table tab
+  currentDetailTab = 'table';
+  document.getElementById('panel-table').classList.remove('hidden');
+  document.getElementById('panel-gantt').classList.add('hidden');
+  document.getElementById('tab-table').classList.add('active');
+  document.getElementById('tab-gantt').classList.remove('active');
 
   renderDetailHeader(plan);
   populateResponsibleFilter(plan);
@@ -1986,6 +2232,7 @@ async function saveInitiative() {
   renderDetailHeader(plan);
   populateResponsibleFilter(plan);
   renderInitiatives();
+  if (currentDetailTab === 'gantt') renderGantt();
   closeInitiativeModal();
   const ok = await upsertInitiativeSupabase(plan.id, targetInit);
   if (!ok) showToast('No se pudo sincronizar con Supabase.', 'error');
@@ -2009,6 +2256,7 @@ function deleteInitiative(initId) {
       renderDetailHeader(plan);
       populateResponsibleFilter(plan);
       renderInitiatives();
+      if (currentDetailTab === 'gantt') renderGantt();
       showToast('Iniciativa eliminada.', 'success');
     }
   );
@@ -2069,11 +2317,229 @@ function escHtml(str) {
 // Los modales solo se cierran mediante el botón "Cerrar" o el ícono "X".
 
 // ═══════════════════════════════════════════════════
+// DETAIL TABS
+// ═══════════════════════════════════════════════════
+let currentDetailTab = 'table';
+
+function switchDetailTab(tab) {
+  currentDetailTab = tab;
+  document.getElementById('panel-table').classList.toggle('hidden', tab !== 'table');
+  document.getElementById('panel-gantt').classList.toggle('hidden', tab !== 'gantt');
+  document.getElementById('tab-table').classList.toggle('active', tab === 'table');
+  document.getElementById('tab-gantt').classList.toggle('active', tab === 'gantt');
+  if (tab === 'gantt') renderGantt();
+}
+
+// ═══════════════════════════════════════════════════
+// GANTT
+// ═══════════════════════════════════════════════════
+let ganttZoom = 'quarter';
+
+const PHASE_DOT_COLOR = { entendimiento:'var(--blue)', definicion:'var(--cyan)', ejecucion:'var(--indigo)' };
+
+function setGanttZoom(z) {
+  ganttZoom = z;
+  ['month','quarter','year'].forEach(k => {
+    document.getElementById('zoom-'+k).classList.toggle('active', k === z);
+  });
+  renderGantt();
+}
+
+function renderGantt() {
+  const plan = getPlan(currentPlanId);
+  if (!plan) return;
+
+  const withDates = plan.initiatives.filter(i => i.start && i.end);
+  const noDates   = plan.initiatives.filter(i => !i.start || !i.end);
+
+  // ── No-dates panel ──────────────────────────
+  const ndWrap = document.getElementById('gantt-nodates');
+  if (noDates.length) {
+    ndWrap.style.display = '';
+    let html = `<div class="gantt-nd-hdr">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Sin fecha definida (${noDates.length})
+    </div>`;
+    noDates.forEach(init => {
+      const phases = (init.phases||[]).map(p=>`<span class="badge badge-phase-${p}" style="font-size:9px;padding:2px 8px;">${phaseLabel(p)}</span>`).join('');
+      html += `<div class="gantt-nd-row">
+        <div class="gantt-nd-lbl" onclick="editInitiative('${escHtml(init.id)}')">
+          <div style="font-size:12px;font-weight:600;color:var(--light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:228px;">${escHtml(init.name)}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);opacity:.7;">${escHtml(init.responsible||'')}</div>
+        </div>
+        <div class="gantt-nd-body">
+          <span class="badge badge-${init.status}" style="font-size:9px;">${statusLabel(init.status)}</span>
+          ${phases}
+          <span class="gantt-nd-tag">Sin fechas — haz clic para asignar</span>
+        </div>
+      </div>`;
+    });
+    ndWrap.innerHTML = html;
+  } else {
+    ndWrap.style.display = 'none';
+  }
+
+  const root = document.getElementById('gantt-root');
+  if (!withDates.length) {
+    root.innerHTML = `<div class="gantt-empty">Ninguna iniciativa tiene fechas de inicio y fin asignadas.<br>Edita las iniciativas para agregar fechas y visualizarlas en el Gantt.</div>`;
+    return;
+  }
+
+  // ── Compute timeline range ──────────────────
+  const minDate = withDates.reduce((m,i) => i.start < m ? i.start : m, withDates[0].start);
+  const maxDate = withDates.reduce((m,i) => i.end   > m ? i.end   : m, withDates[0].end);
+
+  const minD  = parseDate(minDate);
+  const maxD  = parseDate(maxDate);
+  const range = buildRange(minD, maxD, ganttZoom);
+  const { cols, colW } = range;
+
+  const totalW = 260 + cols.length * colW;
+  const labelW = 260;
+
+  // ── Header HTML ─────────────────────────────
+  let monthsHtml = '';
+  cols.forEach(col => {
+    monthsHtml += `<div class="gantt-mcell" style="width:${colW}px;flex-shrink:0;">
+      <div class="gantt-mcell-name">${col.label}</div>
+      <div class="gantt-mcell-year">${col.year}</div>
+    </div>`;
+  });
+
+  // ── Rows HTML ────────────────────────────────
+  let rowsHtml = '';
+  withDates.forEach(init => {
+    const { left, width } = barPosition(init.start, init.end, range);
+    const status   = init.status || 'not-started';
+    const fillW    = Math.round(init.progress || 0);
+    const phases   = (init.phases||[]);
+    const phaseDots = phases.map(p=>`<div class="gantt-pdot" style="background:${PHASE_DOT_COLOR[p]};opacity:.9;"></div>`).join('');
+    let vlines = '';
+    cols.forEach((col, idx) => {
+      vlines += `<div class="gantt-vline" style="left:${idx*colW}px;"></div>`;
+    });
+
+    rowsHtml += `
+      <div class="gantt-lrow" onclick="editInitiative('${escHtml(init.id)}')">
+        <div class="gantt-lrow-name">${escHtml(init.name)}</div>
+        <div class="gantt-lrow-resp">${escHtml(init.responsible||'')}</div>
+      </div>
+      <div class="gantt-brow" style="width:${cols.length*colW}px;" onclick="editInitiative('${escHtml(init.id)}')">
+        ${vlines}
+        ${left !== null ? `
+        <div class="gantt-bar gbar-${status}" style="left:${left}px;width:${Math.max(width,6)}px;" title="${escHtml(init.name)} · ${init.progress}%">
+          <div class="gantt-bfill" style="width:${fillW}%;"></div>
+          ${width > 28 ? `<span class="gantt-blbl">${init.progress}%</span>` : ''}
+          ${phaseDots ? `<div class="gantt-pdots">${phaseDots}</div>` : ''}
+        </div>` : ''}
+      </div>`;
+  });
+
+  // ── Today line ──────────────────────────────
+  const todayStr  = new Date().toISOString().slice(0,10);
+  const todayPos  = dateToX(todayStr, range);
+  const todayLine = (todayPos !== null)
+    ? `<div class="gantt-today-line" style="left:${labelW + todayPos}px;">
+         <div class="gantt-today-lbl">Hoy</div>
+       </div>`
+    : '';
+
+  // ── Assemble ─────────────────────────────────
+  root.innerHTML = `
+    <div style="position:relative;width:${totalW}px;min-width:100%;">
+      ${todayLine}
+      <div class="gantt-grid" style="grid-template-columns:${labelW}px 1fr;">
+        <div class="gantt-lhdr">Iniciativa</div>
+        <div class="gantt-months-row" style="width:${cols.length*colW}px;">
+          ${monthsHtml}
+        </div>
+        ${rowsHtml}
+      </div>
+    </div>`;
+}
+
+// ── Date / range helpers ─────────────────────────────
+function parseDate(str) {
+  const [y,m,d] = str.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+
+function buildRange(minD, maxD, zoom) {
+  let cols = [];
+  let colW;
+
+  if (zoom === 'year') {
+    colW = 80;
+    const start = new Date(minD.getFullYear(), minD.getMonth(), 1);
+    const end   = new Date(maxD.getFullYear(), maxD.getMonth()+1, 1);
+    for (let d = new Date(start); d < end; d.setMonth(d.getMonth()+1)) {
+      cols.push({ date: new Date(d), label: monthAbbr(d.getMonth()), year: d.getFullYear(), days: daysInMonth(d) });
+    }
+  } else if (zoom === 'quarter') {
+    colW = 120;
+    const start = new Date(minD.getFullYear(), minD.getMonth(), 1);
+    const end   = new Date(maxD.getFullYear(), maxD.getMonth()+1, 1);
+    for (let d = new Date(start); d < end; d.setMonth(d.getMonth()+1)) {
+      cols.push({ date: new Date(d), label: monthAbbr(d.getMonth()), year: d.getFullYear(), days: daysInMonth(d) });
+    }
+  } else {
+    colW = 52;
+    const start = mondayOf(minD);
+    const endD  = new Date(maxD); endD.setDate(endD.getDate()+7);
+    for (let d = new Date(start); d < endD; d.setDate(d.getDate()+7)) {
+      const dd = new Date(d);
+      cols.push({ date: dd, label: `${dd.getDate()} ${monthAbbr(dd.getMonth())}`, year: dd.getFullYear(), days: 7 });
+    }
+  }
+
+  const timelineStart = cols[0].date;
+  const lastCol       = cols[cols.length-1];
+  const timelineEnd   = new Date(lastCol.date);
+  timelineEnd.setDate(timelineEnd.getDate() + lastCol.days);
+  const totalDays = (timelineEnd - timelineStart) / 86400000;
+
+  return { cols, colW, timelineStart, timelineEnd, totalDays };
+}
+
+function barPosition(startStr, endStr, range) {
+  const { timelineStart, totalDays, cols, colW } = range;
+  const totalPx = cols.length * colW;
+  const s = parseDate(startStr);
+  const e = parseDate(endStr);
+  e.setDate(e.getDate()+1);
+  const left  = ((s - timelineStart) / 86400000) / totalDays * totalPx;
+  const right = ((e - timelineStart) / 86400000) / totalDays * totalPx;
+  const width = right - left;
+  if (right < 0 || left > totalPx) return { left: null, width: 0 };
+  return { left: Math.max(0, left), width: width - Math.max(0, -left) };
+}
+
+function dateToX(dateStr, range) {
+  const { timelineStart, timelineEnd, cols, colW } = range;
+  const totalPx = cols.length * colW;
+  const d = parseDate(dateStr);
+  if (d < timelineStart || d > timelineEnd) return null;
+  return ((d - timelineStart) / 86400000) / ((timelineEnd - timelineStart) / 86400000) * totalPx;
+}
+
+function mondayOf(d) {
+  const day = d.getDay();
+  const diff = (day === 0) ? -6 : 1 - day;
+  const m = new Date(d); m.setDate(d.getDate() + diff); return m;
+}
+function daysInMonth(d) {
+  return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+}
+const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+function monthAbbr(m) { return MONTH_NAMES[m]; }
+
+// ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
 (async function initApp() {
   await loadData();
   renderDashboard();
+  startSupabaseSync();
 })();
 </script>
 </body>
