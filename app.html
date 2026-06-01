@@ -1207,8 +1207,14 @@ table.initiatives-table {
           </select>
         </div>
         <div class="filter-group">
-          <span class="filter-label">Responsable</span>
+          <span class="filter-label">Resp. Cliente</span>
           <select class="filter-select" id="filter-responsible" onchange="renderInitiatives()">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Resp. Stratika</span>
+          <select class="filter-select" id="filter-responsible-stratika" onchange="renderInitiatives()">
             <option value="">Todos</option>
           </select>
         </div>
@@ -1229,7 +1235,8 @@ table.initiatives-table {
           <thead>
             <tr>
               <th>Iniciativa</th>
-              <th>Responsable</th>
+              <th>Resp. Cliente</th>
+              <th>Resp. Stratika</th>
               <th>Fechas</th>
               <th>Fases</th>
               <th>Prioridad</th>
@@ -1334,9 +1341,13 @@ table.initiatives-table {
           <label class="form-label" for="init-name">Nombre de la Iniciativa *</label>
           <input class="form-input" type="text" id="init-name" placeholder="Ej. Implementación CRM">
         </div>
-        <div class="form-field" style="grid-column:1/-1;">
-          <label class="form-label" for="init-responsible">Responsable *</label>
-          <input class="form-input" type="text" id="init-responsible" placeholder="Nombre del responsable">
+        <div class="form-field">
+          <label class="form-label" for="init-responsible">Responsable cliente *</label>
+          <input class="form-input" type="text" id="init-responsible" placeholder="Nombre del responsable cliente">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="init-responsible-stratika">Responsable Stratika</label>
+          <input class="form-input" type="text" id="init-responsible-stratika" placeholder="Nombre del responsable Stratika">
         </div>
         <div class="form-field">
           <label class="form-label" for="init-start">Fecha de Inicio</label>
@@ -1820,6 +1831,7 @@ function showDetail(planId) {
   document.getElementById('filter-status').value = '';
   document.getElementById('filter-priority').value = '';
   document.getElementById('filter-responsible').value = '';
+  document.getElementById('filter-responsible-stratika').value = '';
   document.getElementById('search-initiatives').value = '';
 
   // Reset to table tab
@@ -1934,33 +1946,42 @@ function renderDetailHeader(plan) {
 }
 
 function populateResponsibleFilter(plan) {
-  const responsibles = [...new Set(plan.initiatives.map(i => i.responsible).filter(Boolean))].sort();
-  const sel = document.getElementById('filter-responsible');
-  const current = sel.value;
-  sel.innerHTML = '<option value="">Todos</option>';
-  responsibles.forEach(r => {
-    const opt = document.createElement('option');
-    opt.value = r;
-    opt.textContent = r;
-    if (r === current) opt.selected = true;
-    sel.appendChild(opt);
-  });
+  const fill = (selId, values) => {
+    const sel = document.getElementById(selId);
+    const current = sel.value;
+    sel.innerHTML = '<option value="">Todos</option>';
+    values.forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = r;
+      if (r === current) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  };
+  const clients   = [...new Set(plan.initiatives.map(i => i.responsible).filter(Boolean))].sort();
+  const stratikas = [...new Set(plan.initiatives.map(i => i.responsibleStratika).filter(Boolean))].sort();
+  fill('filter-responsible', clients);
+  fill('filter-responsible-stratika', stratikas);
 }
 
 function renderInitiatives() {
   const plan = getPlan(currentPlanId);
   if (!plan) return;
 
-  const statusF = document.getElementById('filter-status').value;
-  const priorityF = document.getElementById('filter-priority').value;
+  const statusF      = document.getElementById('filter-status').value;
+  const priorityF    = document.getElementById('filter-priority').value;
   const responsibleF = document.getElementById('filter-responsible').value;
-  const searchQ = document.getElementById('search-initiatives').value.toLowerCase().trim();
+  const stratikaF    = document.getElementById('filter-responsible-stratika').value;
+  const searchQ      = document.getElementById('search-initiatives').value.toLowerCase().trim();
 
   let filtered = plan.initiatives.filter(i => {
-    if (statusF && i.status !== statusF) return false;
-    if (priorityF && i.priority !== priorityF) return false;
-    if (responsibleF && i.responsible !== responsibleF) return false;
-    if (searchQ && !i.name.toLowerCase().includes(searchQ) && !(i.responsible||'').toLowerCase().includes(searchQ)) return false;
+    if (statusF      && i.status              !== statusF)      return false;
+    if (priorityF    && i.priority            !== priorityF)    return false;
+    if (responsibleF && i.responsible         !== responsibleF) return false;
+    if (stratikaF    && i.responsibleStratika !== stratikaF)    return false;
+    if (searchQ && !i.name.toLowerCase().includes(searchQ)
+                && !(i.responsible||'').toLowerCase().includes(searchQ)
+                && !(i.responsibleStratika||'').toLowerCase().includes(searchQ)) return false;
     return true;
   });
 
@@ -1981,6 +2002,9 @@ function renderInitiatives() {
         </td>
         <td>
           <div class="init-responsible">${escHtml(init.responsible || '–')}</div>
+        </td>
+        <td>
+          <div class="init-responsible">${escHtml(init.responsibleStratika || '–')}</div>
         </td>
         <td>
           <div class="init-date" style="font-size:11px;">
@@ -2127,6 +2151,7 @@ function openInitiativeModal(initId) {
     document.getElementById('btn-save-init-text').textContent = 'Guardar Cambios';
     document.getElementById('init-name').value = init.name;
     document.getElementById('init-responsible').value = init.responsible || '';
+    document.getElementById('init-responsible-stratika').value = init.responsibleStratika || '';
     document.getElementById('init-start').value = init.start || '';
     document.getElementById('init-end').value = init.end || '';
     document.getElementById('init-priority').value = init.priority || 'medium';
@@ -2140,6 +2165,7 @@ function openInitiativeModal(initId) {
     document.getElementById('btn-save-init-text').textContent = 'Agregar Iniciativa';
     document.getElementById('init-name').value = '';
     document.getElementById('init-responsible').value = '';
+    document.getElementById('init-responsible-stratika').value = '';
     document.getElementById('init-start').value = '';
     document.getElementById('init-end').value = '';
     document.getElementById('init-priority').value = 'medium';
@@ -2208,6 +2234,7 @@ async function saveInitiative() {
   const data = {
     name,
     responsible,
+    responsibleStratika: document.getElementById('init-responsible-stratika').value.trim(),
     start: document.getElementById('init-start').value,
     end: document.getElementById('init-end').value,
     priority: document.getElementById('init-priority').value,
