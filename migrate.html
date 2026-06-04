@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://figfwywciaeypwvzpskq.supabase.co; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Migración a Supabase — Stratika</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -156,39 +159,9 @@
     <div class="step-title">Paso 2: Crear Tablas en Supabase</div>
     <div class="step-content">
       <p style="margin-bottom: 12px;">Ejecuta este SQL en el <strong>SQL Editor</strong> de tu proyecto Supabase:</p>
-      <div class="stat-box" style="white-space: pre-wrap; overflow-x: auto;">-- Crear tabla plans
-CREATE TABLE public.plans (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  owner TEXT,
-  description TEXT,
-  created_at DATE,
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Crear tabla initiatives
-CREATE TABLE public.initiatives (
-  id TEXT PRIMARY KEY,
-  plan_id TEXT NOT NULL REFERENCES public.plans(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  responsible TEXT,
-  start_date DATE,
-  end_date DATE,
-  priority TEXT DEFAULT 'medium',
-  status TEXT DEFAULT 'not-started',
-  progress INTEGER DEFAULT 0,
-  phases TEXT[],
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Desactivar RLS (para usar sin autenticación)
-ALTER TABLE public.plans DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.initiatives DISABLE ROW LEVEL SECURITY;
-
--- Crear índices
-CREATE INDEX idx_initiatives_plan_id ON public.initiatives(plan_id);</div>
+      <div class="stat-box" id="sql-script-box" style="white-space: pre-wrap; overflow-x: auto;">Cargando script SQL desde migration-script.sql...</div>
       <div class="warning-box">
-        ⚠️ <strong>Importante:</strong> Si planeas usar autenticación después, mantén RLS activado y configura policies.
+        ⚠️ <strong>Importante:</strong> Este flujo ahora requiere sesion autenticada (anonima) y tablas con RLS habilitado. Verifica en Supabase que Anonymous Sign-Ins este activado.
       </div>
     </div>
   </div>
@@ -233,24 +206,69 @@ CREATE INDEX idx_initiatives_plan_id ON public.initiatives(plan_id);</div>
 
 <script>
 const STORAGE_KEY = 'stratika_plans_v3';
+const STORAGE_KEY_FALLBACKS = ['stratika_plans_v3', 'stratika_plans_v2', 'stratika_plans_v1'];
+const SUPABASE_SCOPE_KEY = 'stratika_supabase_scope_v1';
+
+let supabaseScopeCache = null;
+
+function createSupabaseScope() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID();
+  }
+  return `scope_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function getSupabaseScope() {
+  if (supabaseScopeCache) return supabaseScopeCache;
+  try {
+    const current = localStorage.getItem(SUPABASE_SCOPE_KEY);
+    if (current) {
+      supabaseScopeCache = current;
+      return current;
+    }
+    const created = createSupabaseScope();
+    localStorage.setItem(SUPABASE_SCOPE_KEY, created);
+    supabaseScopeCache = created;
+    return created;
+  } catch (e) {
+    if (!supabaseScopeCache) supabaseScopeCache = createSupabaseScope();
+    return supabaseScopeCache;
+  }
+}
+
+function loadPlansFromLocalStorage() {
+  for (const key of STORAGE_KEY_FALLBACKS) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed)); } catch (e) {}
+        return parsed;
+      }
+    } catch (e) {}
+  }
+  return null;
+}
 
 async function loadLocalStats() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
+    const plans = loadPlansFromLocalStorage();
+    if (!plans) {
       document.getElementById('local-stats').innerHTML = `
         <strong style="color: #A7B0BC;">❌ Sin datos en LocalStorage</strong>
         <p style="margin-top: 8px; font-size: 12px;">No hay información local para migrar.</p>
       `;
       return null;
     }
-    const plans = JSON.parse(raw);
     const initCount = plans.reduce((sum, p) => sum + (p.initiatives || []).length, 0);
+    const taskCount = plans.reduce((sum, p) => sum + (p.initiatives || []).reduce((acc, i) => acc + (Array.isArray(i.tasks) ? i.tasks.length : 0), 0), 0);
     document.getElementById('local-stats').innerHTML = `
       <strong>✓ Datos encontrados en LocalStorage:</strong>
       <div style="margin-top: 8px;">
         <div>📋 Planes: <span style="color: #22D3EE;">${plans.length}</span></div>
         <div>📌 Iniciativas: <span style="color: #22D3EE;">${initCount}</span></div>
+        <div>✅ Tareas: <span style="color: #22D3EE;">${taskCount}</span></div>
       </div>
     `;
     return plans;
@@ -266,26 +284,33 @@ async function loadLocalStats() {
 async function executeMigration() {
   const btn = document.getElementById('migrate-btn');
   const statusEl = document.getElementById('migration-status');
+  const scope = getSupabaseScope();
   btn.disabled = true;
 
   statusEl.className = 'status loading';
   statusEl.textContent = '⏳ Conectando con Supabase...';
 
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
+    const plans = loadPlansFromLocalStorage();
+    if (!plans) {
       throw new Error('No hay datos en LocalStorage para migrar.');
     }
-    const plans = JSON.parse(raw);
 
     if (!window.supabaseClient) {
       throw new Error('Cliente de Supabase no inicializado.');
     }
 
+    if (typeof window.ensureSupabaseSession === 'function') {
+      const sessionReady = await window.ensureSupabaseSession();
+      if (!sessionReady.ok) {
+        throw new Error('No fue posible iniciar sesion segura con Supabase.');
+      }
+    }
+
     // Limpiar Supabase
     statusEl.textContent = '⏳ Limpiando datos anteriores...';
-    const { error: delInitError } = await supabaseClient.from('initiatives').delete().neq('id', '');
-    const { error: delPlanError } = await supabaseClient.from('plans').delete().neq('id', '');
+    const { error: delInitError } = await supabaseClient.from('initiatives').delete().eq('workspace_scope', scope);
+    const { error: delPlanError } = await supabaseClient.from('plans').delete().eq('workspace_scope', scope);
 
     if (delInitError || delPlanError) {
       throw new Error('Error al limpiar Supabase: ' + (delInitError?.message || delPlanError?.message));
@@ -299,6 +324,7 @@ async function executeMigration() {
       owner: p.owner || null,
       description: p.desc || null,
       created_at: p.createdAt || null,
+      workspace_scope: scope,
     }));
 
     if (plansPayload.length) {
@@ -314,17 +340,30 @@ async function executeMigration() {
         plan_id: p.id,
         name: i.name,
         responsible: i.responsible || null,
+        responsible_stratika: i.responsibleStratika || null,
         start_date: i.start || null,
         end_date: i.end || null,
         priority: i.priority || 'medium',
         status: i.status || 'not-started',
         progress: typeof i.progress === 'number' ? i.progress : 0,
         phases: i.phases || [],
+        tasks: Array.isArray(i.tasks) ? i.tasks : [],
+        workspace_scope: scope,
       }))
     );
 
     if (initiativesPayload.length) {
-      const { error: insertInitError } = await supabaseClient.from('initiatives').insert(initiativesPayload);
+      let { error: insertInitError } = await supabaseClient.from('initiatives').insert(initiativesPayload);
+
+      const msg = String(insertInitError?.message || '').toLowerCase();
+      const missingExtendedCols = msg.includes('responsible_stratika') || msg.includes('tasks');
+
+      if (insertInitError && missingExtendedCols) {
+        const fallbackPayload = initiativesPayload.map(({ responsible_stratika, tasks, ...base }) => base);
+        const retry = await supabaseClient.from('initiatives').insert(fallbackPayload);
+        insertInitError = retry.error;
+      }
+
       if (insertInitError) throw new Error('Error al insertar iniciativas: ' + insertInitError.message);
     }
 
@@ -348,8 +387,29 @@ function clearLocalStorage() {
   }
 }
 
+async function loadMigrationSqlScript() {
+  const scriptBox = document.getElementById('sql-script-box');
+  if (!scriptBox) return;
+
+  try {
+    const response = await fetch('migration-script.sql', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    scriptBox.textContent = await response.text();
+  } catch (e) {
+    scriptBox.textContent = 'No se pudo cargar automaticamente migration-script.sql. Abre ese archivo en el proyecto y copia su contenido en el SQL Editor de Supabase.';
+  }
+}
+
 // Cargar estadísticas al abrir la página
-loadLocalStats();
+(async function initMigrationPage() {
+  await loadMigrationSqlScript();
+  await loadLocalStats();
+  const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const autostart = isLocalHost && new URLSearchParams(window.location.search).get('autostart') === '1';
+  if (autostart) {
+    await executeMigration();
+  }
+})();
 </script>
 
 </body>

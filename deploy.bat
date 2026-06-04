@@ -1,3 +1,3 @@
 @echo off
-cd /d "c:\Users\danielsermo\iCloudDrive\Proyectos de Desarrollo\Hoja de Ruta"
+cd /d "%~dp0"
 npx vercel --prod

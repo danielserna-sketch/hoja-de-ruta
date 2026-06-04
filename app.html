@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://figfwywciaeypwvzpskq.supabase.co; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
 <title>Planes de Trabajo — Stratika.</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050608'/%3E%3Ctext x='5' y='50' font-weight='800' font-size='46' letter-spacing='-1.5' fill='%23F5F7FA' font-family='Arial Black,Arial,sans-serif'%3ES.%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,7 +100,6 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 40px;
   flex-wrap: wrap;
 }
-.page-header-left {}
 .page-eyebrow {
   font-family: var(--mono);
   font-size: 10px;
@@ -689,7 +691,6 @@ table.initiatives-table {
 /* ═══ FORM ELEMENTS ═══ */
 .form-grid { display: grid; gap: 20px; }
 .form-grid-2 { grid-template-columns: 1fr 1fr; }
-.form-field {}
 .form-label {
   display: block;
   font-family: var(--mono);
@@ -749,6 +750,7 @@ table.initiatives-table {
 }
 .range-input {
   flex: 1;
+  appearance: none;
   -webkit-appearance: none;
   height: 4px;
   background: var(--surface);
@@ -1040,6 +1042,155 @@ table.initiatives-table {
   color:var(--muted); opacity:.4; border:1px dashed rgba(167,176,188,.15); padding:3px 10px;
 }
 .gantt-empty { padding:56px; text-align:center; font-size:13px; color:var(--muted); border:1px solid var(--border); background:var(--deep); }
+
+/* ═══ TASKS ═══ */
+.modal-tasks { max-width: 680px; }
+.tasks-init-name {
+  font-size: 15px; font-weight: 700; color: var(--light);
+  letter-spacing: -0.3px; margin-bottom: 4px;
+}
+.tasks-init-meta {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; opacity: .6; margin-bottom: 20px;
+}
+.tasks-add-row {
+  display: flex; gap: 8px; margin-bottom: 20px;
+}
+.tasks-add-input {
+  flex: 1;
+  background: var(--s2); border: 1px solid var(--borderb);
+  color: var(--light); font-family: var(--font); font-size: 13px;
+  padding: 10px 14px; outline: none; transition: border-color .2s;
+}
+.tasks-add-input:focus { border-color: var(--blue); }
+.tasks-add-input::placeholder { color: var(--muted); opacity: .4; }
+.tasks-list { display: flex; flex-direction: column; gap: 1px; }
+.task-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--deep); padding: 11px 14px;
+  border: 1px solid var(--border); transition: background .15s;
+}
+.task-row:hover { background: var(--s2); }
+.task-row.done .task-name { text-decoration: line-through; color: var(--muted); opacity: .5; }
+.task-check {
+  width: 16px; height: 16px; flex-shrink: 0;
+  border: 1px solid var(--borderb); background: var(--s2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.task-check:hover { border-color: var(--blue); }
+.task-check.checked { background: var(--blue); border-color: var(--blue); }
+.task-check svg { display: none; }
+.task-check.checked svg { display: block; }
+.task-name { flex: 1; font-size: 13px; color: var(--light); line-height: 1.4; }
+.task-name-input {
+  flex: 1; background: transparent; border: none; border-bottom: 1px solid var(--blue);
+  color: var(--light); font-family: var(--font); font-size: 13px;
+  padding: 1px 4px; outline: none;
+}
+.task-del {
+  color: var(--muted); opacity: 0; transition: opacity .15s, color .15s;
+  padding: 2px; flex-shrink: 0;
+}
+.task-row:hover .task-del { opacity: 1; }
+.task-del:hover { color: #ef4444; }
+.tasks-summary {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-top: 16px;
+  padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tasks-progress-mini { width: 120px; }
+.init-task-badge {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  color: var(--muted); opacity: .7; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px;
+  white-space: nowrap;
+}
+.init-task-badge:hover { opacity: 1; color: var(--blue); }
+.init-task-badge .task-dot {
+  width: 6px; height: 6px; background: var(--blue); opacity: .7;
+}
+.tasks-empty {
+  text-align: center; padding: 32px; font-size: 13px;
+  color: var(--muted); opacity: .5;
+}
+
+/* ═══ INLINE TASK ROW ═══ */
+.task-subrow td {
+  padding: 0 !important; background: var(--black) !important;
+  border-bottom: 2px solid var(--blue) !important;
+}
+.task-inline-wrap {
+  padding: 16px 20px 20px 48px;
+  border-left: 2px solid rgba(59,130,246,.25);
+  margin-left: 16px;
+}
+.task-inline-header {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--blue); opacity: .7;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.task-inline-add {
+  display: flex; gap: 8px; margin-bottom: 12px; max-width: 560px;
+}
+.task-inline-input {
+  flex: 1; background: var(--s2); border: 1px solid var(--borderb);
+  color: var(--light); font-family: var(--font); font-size: 12px;
+  padding: 8px 12px; outline: none; transition: border-color .2s;
+}
+.task-inline-input:focus { border-color: var(--blue); }
+.task-inline-input::placeholder { color: var(--muted); opacity: .4; }
+.task-inline-list { display: flex; flex-direction: column; gap: 1px; max-width: 720px; }
+.task-inline-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; background: var(--deep);
+  border: 1px solid var(--border); transition: background .15s;
+}
+.task-inline-row:hover { background: var(--s2); }
+.task-inline-row.done .task-inline-name {
+  text-decoration: line-through; color: var(--muted); opacity: .45;
+}
+.task-inline-check {
+  width: 14px; height: 14px; flex-shrink: 0;
+  border: 1px solid var(--borderb); background: var(--s2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .15s, border-color .15s;
+}
+.task-inline-check:hover { border-color: var(--blue); }
+.task-inline-check.checked { background: var(--blue); border-color: var(--blue); }
+.task-inline-check svg { display: none; }
+.task-inline-check.checked svg { display: block; }
+.task-inline-name { flex: 1; font-size: 12px; color: var(--light); line-height: 1.4; }
+.task-inline-name-input {
+  flex: 1; background: transparent; border: none;
+  border-bottom: 1px solid var(--blue);
+  color: var(--light); font-family: var(--font); font-size: 12px;
+  padding: 1px 4px; outline: none;
+}
+.task-inline-del {
+  color: var(--muted); opacity: 0; transition: opacity .15s, color .15s;
+  padding: 2px; flex-shrink: 0;
+}
+.task-inline-row:hover .task-inline-del { opacity: 1; }
+.task-inline-del:hover { color: #ef4444; }
+.task-inline-footer {
+  margin-top: 10px; font-family: var(--mono); font-size: 9px;
+  color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 12px;
+}
+.task-inline-progress { width: 100px; }
+.task-toggle-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted); cursor: pointer;
+  transition: color .15s; white-space: nowrap; background: none;
+  border: none; padding: 0;
+}
+.task-toggle-btn:hover { color: var(--blue); }
+.task-toggle-btn.has-tasks { color: var(--blue); opacity: .8; }
+.task-toggle-btn svg { transition: transform .2s; }
+.task-toggle-btn.expanded svg { transform: rotate(90deg); }
 </style>
 </head>
 <body>
@@ -1218,6 +1369,16 @@ table.initiatives-table {
             <option value="">Todos</option>
           </select>
         </div>
+        <div class="filter-group">
+          <span class="filter-label">Ordenar</span>
+          <select class="filter-select" id="sort-initiatives" onchange="renderInitiatives()">
+            <option value="">Sin ordenar</option>
+            <option value="name-asc">Nombre A→Z</option>
+            <option value="name-desc">Nombre Z→A</option>
+            <option value="priority-asc">Prioridad Alta→Baja</option>
+            <option value="priority-desc">Prioridad Baja→Alta</option>
+          </select>
+        </div>
         <div class="filters-spacer"></div>
         <div class="search-wrapper">
           <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1242,6 +1403,7 @@ table.initiatives-table {
               <th>Prioridad</th>
               <th>Estado</th>
               <th>Avance</th>
+              <th>Tareas</th>
               <th></th>
             </tr>
           </thead>
@@ -1411,6 +1573,94 @@ table.initiatives-table {
   </div>
 </div>
 
+<!-- ══════ MODAL: TASK EDIT ══════ -->
+<div class="modal-overlay" id="modal-task-edit">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow" id="task-edit-eyebrow">Tarea</div>
+        <h3 class="modal-title" id="task-edit-title">Nueva Tarea</h3>
+      </div>
+      <button class="modal-close" onclick="closeTaskEditModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid form-grid-2">
+        <div class="form-field" style="grid-column:1/-1;">
+          <label class="form-label" for="task-edit-name">Nombre de la Tarea *</label>
+          <input class="form-input" type="text" id="task-edit-name" placeholder="Ej. Revisión de requerimientos">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="task-edit-responsible">Responsable cliente</label>
+          <input class="form-input" type="text" id="task-edit-responsible" placeholder="Responsable cliente">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="task-edit-responsible-stratika">Responsable Stratika</label>
+          <input class="form-input" type="text" id="task-edit-responsible-stratika" placeholder="Responsable Stratika">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="task-edit-start">Fecha de Inicio</label>
+          <input class="form-input" type="date" id="task-edit-start">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="task-edit-end">Fecha Final</label>
+          <input class="form-input" type="date" id="task-edit-end">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="task-edit-priority">Prioridad</label>
+          <select class="form-select" id="task-edit-priority">
+            <option value="high">Alta</option>
+            <option value="medium" selected>Media</option>
+            <option value="low">Baja</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="task-edit-status">Estado</label>
+          <select class="form-select" id="task-edit-status">
+            <option value="not-started" selected>No iniciada</option>
+            <option value="in-progress">En progreso</option>
+            <option value="at-risk">En riesgo</option>
+            <option value="completed">Completada</option>
+          </select>
+        </div>
+        <div class="form-field" style="grid-column:1/-1;">
+          <label class="form-label">Fases</label>
+          <div class="phase-toggle-group" id="task-phase-toggle-group">
+            <div class="phase-toggle" data-phase="entendimiento" onclick="toggleTaskPhase(this)">
+              <div class="phase-toggle-dot"></div>
+              <span class="phase-toggle-label">Entendimiento</span>
+            </div>
+            <div class="phase-toggle" data-phase="definicion" onclick="toggleTaskPhase(this)">
+              <div class="phase-toggle-dot"></div>
+              <span class="phase-toggle-label">Definición</span>
+            </div>
+            <div class="phase-toggle" data-phase="ejecucion" onclick="toggleTaskPhase(this)">
+              <div class="phase-toggle-dot"></div>
+              <span class="phase-toggle-label">Ejecución</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-field" style="grid-column:1/-1;">
+          <label class="form-label" for="task-edit-progress">Porcentaje de Avance</label>
+          <div class="range-wrapper">
+            <input class="range-input" type="range" id="task-edit-progress" min="0" max="100" value="0"
+              oninput="document.getElementById('task-range-display').textContent=this.value+'%'">
+            <span class="range-value" id="task-range-display">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeTaskEditModal()">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="saveTaskEdit()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="task-edit-save-text">Agregar Tarea</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════ CONFIRM DIALOG ══════ -->
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-dialog">
@@ -1442,59 +1692,213 @@ let editingInitId = null;
 let confirmCallback = null;
 
 const STORAGE_KEY = 'stratika_plans_v3';
-const SUPABASE_MIGRATION_KEY = 'stratika_supabase_migrated_v1';
+const STORAGE_KEY_FALLBACKS = ['stratika_plans_v3', 'stratika_plans_v2', 'stratika_plans_v1'];
+const SUPABASE_SCOPE_KEY = 'stratika_supabase_scope_v1';
 const SUPABASE_SYNC_INTERVAL_MS = 15000;
+const DEFAULT_STRATIKA_RESPONSIBLES = ['Daniel Serna', 'Fernando Montero'];
 
 let supabaseSyncTimer = null;
 let supabaseSyncListening = false;
 let isRemoteSyncInProgress = false;
 let lastRemoteSnapshot = '';
+let supabaseScopeCache = null;
+let hasSuccessfulRemoteRead = false;
+
+function createSupabaseScope() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID();
+  }
+  return `scope_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function getSupabaseScope() {
+  if (supabaseScopeCache) return supabaseScopeCache;
+  try {
+    const current = localStorage.getItem(SUPABASE_SCOPE_KEY);
+    if (current) {
+      supabaseScopeCache = current;
+      return current;
+    }
+    const created = createSupabaseScope();
+    localStorage.setItem(SUPABASE_SCOPE_KEY, created);
+    supabaseScopeCache = created;
+    return created;
+  } catch (e) {
+    if (!supabaseScopeCache) supabaseScopeCache = createSupabaseScope();
+    return supabaseScopeCache;
+  }
+}
+
+function canWriteToSupabase() {
+  return hasSuccessfulRemoteRead;
+}
+
+function supabaseWriteGuardMessage() {
+  return 'Sincronizacion bloqueada por seguridad: primero debe cargarse Supabase correctamente.';
+}
 
 // ═══════════════════════════════════════════════════
 // PERSISTENCE
 // ═══════════════════════════════════════════════════
 async function loadData() {
   let localPlans = [];
+  const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const forceLocalToSupabase = isLocalHost && new URLSearchParams(window.location.search).get('forceLocalToSupabase') === '1';
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) localPlans = JSON.parse(raw);
+    localPlans = loadPlansFromLocalStorage();
   } catch (e) {
     localPlans = [];
   }
 
-  if (!window.supabaseClient) {
-    plans = localPlans;
-    if (!plans.length) seedDemoData();
-    return;
+  plans = localPlans;
+
+  // Remote-first: evita subir cache antigua de navegador al abrir la app.
+  if (window.supabaseClient) {
+    if (typeof window.ensureSupabaseSession === 'function') {
+      const sessionReady = await window.ensureSupabaseSession();
+      if (!sessionReady.ok) {
+        saveData({ skipSupabaseSync: true });
+        return;
+      }
+    }
+
+    if (forceLocalToSupabase && localPlans.length) {
+      const forced = await replaceSupabaseWithLocal(localPlans);
+      if (forced) hasSuccessfulRemoteRead = true;
+      plans = localPlans;
+      saveData({ skipSupabaseSync: true });
+      if (!plans.length) {
+        seedDemoData();
+        saveData({ skipSupabaseSync: true });
+      }
+      return;
+    }
+
+    const remote = await fetchPlansFromSupabase();
+    if (remote.ok) {
+      hasSuccessfulRemoteRead = true;
+      const remotePlans = mapRemoteToLocal(remote.plans, remote.initiatives);
+      if (remotePlans.length) {
+        plans = remotePlans;
+      }
+    }
   }
 
-  const remote = await fetchPlansFromSupabase();
-  if (!remote.ok) {
-    plans = localPlans;
-    if (!plans.length) seedDemoData();
-    return;
-  }
-
-  const hasRemoteData = remote.plans.length || remote.initiatives.length;
-  if (!hasRemoteData && localPlans.length && !localStorage.getItem(SUPABASE_MIGRATION_KEY)) {
-    const migrated = await replaceSupabaseWithLocal(localPlans);
-    if (migrated) localStorage.setItem(SUPABASE_MIGRATION_KEY, '1');
-  }
-
-  const afterMigration = await fetchPlansFromSupabase();
-  if (afterMigration.ok && (afterMigration.plans.length || afterMigration.initiatives.length)) {
-    plans = mapRemoteToLocal(afterMigration.plans, afterMigration.initiatives);
-  } else {
-    plans = localPlans;
-    if (!plans.length) seedDemoData();
-  }
-
-  saveData();
+  if (!plans.length) seedDemoData();
+  saveData({ skipSupabaseSync: true });
 }
 
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+function loadPlansFromLocalStorage() {
+  for (const key of STORAGE_KEY_FALLBACKS) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw);
+      const sanitized = sanitizePlansCollection(parsed);
+      if (sanitized.length) {
+        // Canonicalizamos en v3 para próximos arranques.
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized)); } catch (e) {}
+        return sanitized;
+      }
+    } catch (e) {}
+  }
+  return [];
+}
+
+function sanitizeEntityId(value) {
+  const text = String(value || '').trim();
+  return /^[A-Za-z0-9_-]{6,120}$/.test(text) ? text : null;
+}
+
+function sanitizePlan(plan) {
+  const safePlanId = sanitizeEntityId(plan?.id);
+  if (!safePlanId) return null;
+
+  const initiatives = (Array.isArray(plan?.initiatives) ? plan.initiatives : [])
+    .map(init => {
+      const safeInitId = sanitizeEntityId(init?.id);
+      if (!safeInitId) return null;
+      return {
+        ...init,
+        id: safeInitId,
+      };
+    })
+    .filter(Boolean);
+
+  return {
+    ...plan,
+    id: safePlanId,
+    initiatives,
+  };
+}
+
+function sanitizePlansCollection(candidate) {
+  if (!Array.isArray(candidate)) return [];
+  return candidate
+    .map(sanitizePlan)
+    .filter(Boolean);
+}
+
+function normalizeRemoteTasks(tasksValue) {
+  if (Array.isArray(tasksValue)) return tasksValue;
+  if (typeof tasksValue === 'string') {
+    try {
+      const parsed = JSON.parse(tasksValue);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+}
+
+function saveData(options = {}) {
+  const { skipSupabaseSync = false } = options;
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+  } catch (e) {
+    // Evita romper la app si el navegador bloquea almacenamiento local.
+  }
   lastRemoteSnapshot = plansSnapshot(plans);
+  if (skipSupabaseSync) return;
+
+  // Sincronización automática no-bloqueante a Supabase
+  syncAllPlansToSupabase();
+}
+
+async function syncAllPlansToSupabase() {
+  if (!window.supabaseClient) return;
+  if (!canWriteToSupabase()) return;
+  
+  try {
+    const plansPayload = plans.map(mapLocalPlanToSupabase);
+    if (plansPayload.length) {
+      await supabaseClient
+        .from('plans')
+        .upsert(plansPayload, { onConflict: 'id' });
+    }
+
+    const initiativesPayload = plans.flatMap(plan =>
+      (plan.initiatives || []).map(init => mapLocalInitiativeToSupabase(plan.id, init))
+    );
+
+    if (initiativesPayload.length) {
+      let { error } = await supabaseClient
+        .from('initiatives')
+        .upsert(initiativesPayload, { onConflict: 'id' });
+
+      if (error && hasExtendedInitiativeColumnError(error)) {
+        const fallbackPayload = initiativesPayload.map(stripExtendedInitiativeFields);
+        await supabaseClient
+          .from('initiatives')
+          .upsert(fallbackPayload, { onConflict: 'id' });
+      }
+    }
+  } catch (e) {
+    // Falla silenciosamente para no interrumpir la UX local
+  }
 }
 
 function plansSnapshot(sourcePlans) {
@@ -1510,12 +1914,27 @@ function plansSnapshot(sourcePlans) {
           id: init.id,
           name: init.name || '',
           responsible: init.responsible || '',
+          responsibleStratika: init.responsibleStratika || '',
           start: init.start || '',
           end: init.end || '',
           priority: init.priority || 'medium',
           status: init.status || 'not-started',
           progress: typeof init.progress === 'number' ? init.progress : 0,
           phases: [...(init.phases || [])].sort(),
+          tasks: (init.tasks || [])
+            .map(task => ({
+              id: task.id || '',
+              name: task.name || '',
+              responsible: task.responsible || '',
+              responsibleStratika: task.responsibleStratika || '',
+              start: task.start || '',
+              end: task.end || '',
+              priority: task.priority || 'medium',
+              status: task.status || (task.done ? 'completed' : 'not-started'),
+              progress: typeof task.progress === 'number' ? task.progress : 0,
+              phases: [...(task.phases || [])].sort(),
+            }))
+            .sort((a, b) => String(a.id).localeCompare(String(b.id))),
         }))
         .sort((a, b) => String(a.id).localeCompare(String(b.id))),
     }))
@@ -1549,12 +1968,14 @@ async function syncFromSupabaseToLocal(render = true) {
     const remote = await fetchPlansFromSupabase();
     if (!remote.ok) return;
 
+    hasSuccessfulRemoteRead = true;
+
     const mappedRemote = mapRemoteToLocal(remote.plans, remote.initiatives);
     const remoteSnapshot = plansSnapshot(mappedRemote);
     if (remoteSnapshot === lastRemoteSnapshot) return;
 
     plans = mappedRemote;
-    saveData();
+    saveData({ skipSupabaseSync: true });
     if (render) refreshCurrentView();
   } finally {
     isRemoteSyncInProgress = false;
@@ -1577,14 +1998,18 @@ function startSupabaseSync() {
 }
 
 async function fetchPlansFromSupabase() {
+  const scope = getSupabaseScope();
+
   const { data: plansData, error: plansError } = await supabaseClient
     .from('plans')
     .select('*')
+    .eq('workspace_scope', scope)
     .order('created_at', { ascending: true });
 
   const { data: initiativesData, error: initiativesError } = await supabaseClient
     .from('initiatives')
-    .select('*');
+    .select('*')
+    .eq('workspace_scope', scope);
 
   if (plansError || initiativesError) {
     return { ok: false, plans: [], initiatives: [] };
@@ -1598,31 +2023,53 @@ async function fetchPlansFromSupabase() {
 }
 
 function mapRemoteToLocal(remotePlans, remoteInitiatives) {
+  // Build lookup of local data to preserve fields Supabase doesn't store (tasks, responsibleStratika)
+  const localById = {};
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      JSON.parse(raw).forEach(p => {
+        (p.initiatives || []).forEach(i => { localById[i.id] = i; });
+      });
+    }
+  } catch(e) {}
+
   const byPlan = remoteInitiatives.reduce((acc, init) => {
-    const key = init.plan_id;
+    const key = sanitizeEntityId(init.plan_id);
+    const safeInitId = sanitizeEntityId(init.id);
+    if (!key || !safeInitId) return acc;
     if (!acc[key]) acc[key] = [];
+    const local = localById[safeInitId] || {};
     acc[key].push({
-      id: init.id,
+      id: safeInitId,
       name: init.name,
       responsible: init.responsible || '',
+      responsibleStratika: init.responsible_stratika || local.responsibleStratika || '',
       start: init.start_date || '',
       end: init.end_date || '',
       priority: init.priority || 'medium',
       status: init.status || 'not-started',
       progress: typeof init.progress === 'number' ? init.progress : 0,
       phases: init.phases || [],
+      tasks: normalizeRemoteTasks(init.tasks).length ? normalizeRemoteTasks(init.tasks) : (local.tasks || []),
     });
     return acc;
   }, {});
 
-  return remotePlans.map(plan => ({
-    id: plan.id,
-    name: plan.name,
-    owner: plan.owner || '',
-    desc: plan.description || '',
-    createdAt: plan.created_at ? String(plan.created_at).slice(0, 10) : '',
-    initiatives: byPlan[plan.id] || [],
-  }));
+  return remotePlans
+    .map(plan => {
+      const safePlanId = sanitizeEntityId(plan.id);
+      if (!safePlanId) return null;
+      return {
+        id: safePlanId,
+        name: plan.name,
+        owner: plan.owner || '',
+        desc: plan.description || '',
+        createdAt: plan.created_at ? String(plan.created_at).slice(0, 10) : '',
+        initiatives: byPlan[safePlanId] || [],
+      };
+    })
+    .filter(Boolean);
 }
 
 function mapLocalPlanToSupabase(plan) {
@@ -1632,6 +2079,7 @@ function mapLocalPlanToSupabase(plan) {
     owner: plan.owner || null,
     description: plan.desc || null,
     created_at: plan.createdAt || null,
+    workspace_scope: getSupabaseScope(),
   };
 }
 
@@ -1641,27 +2089,42 @@ function mapLocalInitiativeToSupabase(planId, init) {
     plan_id: planId,
     name: init.name,
     responsible: init.responsible || null,
+    responsible_stratika: init.responsibleStratika || null,
     start_date: init.start || null,
     end_date: init.end || null,
     priority: init.priority || 'medium',
     status: init.status || 'not-started',
     progress: typeof init.progress === 'number' ? init.progress : 0,
     phases: init.phases || [],
+    tasks: Array.isArray(init.tasks) ? init.tasks : [],
+    workspace_scope: getSupabaseScope(),
   };
 }
 
+function stripExtendedInitiativeFields(payload) {
+  const { responsible_stratika, tasks, ...base } = payload;
+  return base;
+}
+
+function hasExtendedInitiativeColumnError(error) {
+  const msg = String(error?.message || '').toLowerCase();
+  return msg.includes('responsible_stratika') || msg.includes('tasks');
+}
+
 async function replaceSupabaseWithLocal(localPlans) {
+  const scope = getSupabaseScope();
+
   const { error: delInitiativesError } = await supabaseClient
     .from('initiatives')
     .delete()
-    .neq('id', '');
+    .eq('workspace_scope', scope);
 
   if (delInitiativesError) return false;
 
   const { error: delPlansError } = await supabaseClient
     .from('plans')
     .delete()
-    .neq('id', '');
+    .eq('workspace_scope', scope);
 
   if (delPlansError) return false;
 
@@ -1678,9 +2141,18 @@ async function replaceSupabaseWithLocal(localPlans) {
   );
 
   if (initiativesPayload.length) {
-    const { error: insertInitsError } = await supabaseClient
+    let { error: insertInitsError } = await supabaseClient
       .from('initiatives')
       .insert(initiativesPayload);
+
+    if (insertInitsError && hasExtendedInitiativeColumnError(insertInitsError)) {
+      const fallbackPayload = initiativesPayload.map(stripExtendedInitiativeFields);
+      const retry = await supabaseClient
+        .from('initiatives')
+        .insert(fallbackPayload);
+      insertInitsError = retry.error;
+    }
+
     if (insertInitsError) return false;
   }
 
@@ -1689,6 +2161,7 @@ async function replaceSupabaseWithLocal(localPlans) {
 
 async function upsertPlanSupabase(plan) {
   if (!window.supabaseClient) return true;
+  if (!canWriteToSupabase()) return false;
   const { error } = await supabaseClient
     .from('plans')
     .upsert(mapLocalPlanToSupabase(plan), { onConflict: 'id' });
@@ -1697,33 +2170,53 @@ async function upsertPlanSupabase(plan) {
 
 async function upsertInitiativeSupabase(planId, init) {
   if (!window.supabaseClient) return true;
-  const { error } = await supabaseClient
+  if (!canWriteToSupabase()) return false;
+  const payload = mapLocalInitiativeToSupabase(planId, init);
+  let { error } = await supabaseClient
     .from('initiatives')
-    .upsert(mapLocalInitiativeToSupabase(planId, init), { onConflict: 'id' });
+    .upsert(payload, { onConflict: 'id' });
+
+  if (error && hasExtendedInitiativeColumnError(error)) {
+    const fallbackPayload = stripExtendedInitiativeFields(payload);
+    const retry = await supabaseClient
+      .from('initiatives')
+      .upsert(fallbackPayload, { onConflict: 'id' });
+    error = retry.error;
+  }
+
   return !error;
 }
 
 async function deletePlanSupabase(planId) {
   if (!window.supabaseClient) return true;
+  if (!canWriteToSupabase()) return false;
+  const scope = getSupabaseScope();
+
   const { error: delInitsError } = await supabaseClient
     .from('initiatives')
     .delete()
-    .eq('plan_id', planId);
+    .eq('plan_id', planId)
+    .eq('workspace_scope', scope);
   if (delInitsError) return false;
 
   const { error: delPlanError } = await supabaseClient
     .from('plans')
     .delete()
-    .eq('id', planId);
+    .eq('id', planId)
+    .eq('workspace_scope', scope);
   return !delPlanError;
 }
 
 async function deleteInitiativeSupabase(initId) {
   if (!window.supabaseClient) return true;
+  if (!canWriteToSupabase()) return false;
+  const scope = getSupabaseScope();
+
   const { error } = await supabaseClient
     .from('initiatives')
     .delete()
-    .eq('id', initId);
+    .eq('id', initId)
+    .eq('workspace_scope', scope);
   return !error;
 }
 
@@ -1758,7 +2251,6 @@ function seedDemoData() {
       ]
     }
   ];
-  saveData();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1832,6 +2324,7 @@ function showDetail(planId) {
   document.getElementById('filter-priority').value = '';
   document.getElementById('filter-responsible').value = '';
   document.getElementById('filter-responsible-stratika').value = '';
+  document.getElementById('sort-initiatives').value = '';
   document.getElementById('search-initiatives').value = '';
 
   // Reset to table tab
@@ -1959,7 +2452,10 @@ function populateResponsibleFilter(plan) {
     });
   };
   const clients   = [...new Set(plan.initiatives.map(i => i.responsible).filter(Boolean))].sort();
-  const stratikas = [...new Set(plan.initiatives.map(i => i.responsibleStratika).filter(Boolean))].sort();
+  const stratikas = [...new Set([
+    ...DEFAULT_STRATIKA_RESPONSIBLES,
+    ...plan.initiatives.map(i => i.responsibleStratika)
+  ].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
   fill('filter-responsible', clients);
   fill('filter-responsible-stratika', stratikas);
 }
@@ -1973,6 +2469,7 @@ function renderInitiatives() {
   const responsibleF = document.getElementById('filter-responsible').value;
   const stratikaF    = document.getElementById('filter-responsible-stratika').value;
   const searchQ      = document.getElementById('search-initiatives').value.toLowerCase().trim();
+  const sortBy       = document.getElementById('sort-initiatives').value;
 
   let filtered = plan.initiatives.filter(i => {
     if (statusF      && i.status              !== statusF)      return false;
@@ -1985,9 +2482,15 @@ function renderInitiatives() {
     return true;
   });
 
+  const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
+  if (sortBy === 'name-asc')       filtered.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+  else if (sortBy === 'name-desc') filtered.sort((a, b) => b.name.localeCompare(a.name, 'es'));
+  else if (sortBy === 'priority-asc')  filtered.sort((a, b) => (PRIORITY_ORDER[a.priority]??1) - (PRIORITY_ORDER[b.priority]??1));
+  else if (sortBy === 'priority-desc') filtered.sort((a, b) => (PRIORITY_ORDER[b.priority]??1) - (PRIORITY_ORDER[a.priority]??1));
+
   const tbody = document.getElementById('initiatives-tbody');
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--muted);font-size:13px;">
+    tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:48px;color:var(--muted);font-size:13px;">
       ${plan.initiatives.length ? 'No hay iniciativas con los filtros seleccionados.' : 'Este plan no tiene iniciativas aún. Agrega la primera.'}
     </td></tr>`;
     return;
@@ -1996,7 +2499,7 @@ function renderInitiatives() {
   tbody.innerHTML = filtered.map(init => {
     const fillColor = progressColor(init.progress);
     return `
-      <tr>
+      <tr style="cursor:pointer;" onclick="toggleInlineTasks('${init.id}')">
         <td>
           <div class="init-name">${escHtml(init.name)}</div>
         </td>
@@ -2024,7 +2527,10 @@ function renderInitiatives() {
           </div>
         </td>
         <td>
-          <div class="init-actions">
+          ${renderTaskToggleBtn(init)}
+        </td>
+        <td>
+          <div class="init-actions" onclick="event.stopPropagation()">
             <button class="btn btn-ghost btn-icon btn-sm" title="Editar" onclick="editInitiative('${init.id}')">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
@@ -2033,6 +2539,9 @@ function renderInitiatives() {
             </button>
           </div>
         </td>
+      </tr>
+      <tr class="task-subrow" id="task-subrow-${init.id}" style="display:none;">
+        <td colspan="10">${renderInlineTasks(init)}</td>
       </tr>`;
   }).join('');
 }
@@ -2084,7 +2593,7 @@ async function savePlan() {
     if (currentPlanId === editingPlanId) renderDetailHeader(plan);
     renderDashboard();
     const ok = await upsertPlanSupabase(plan);
-    if (!ok) showToast('No se pudo sincronizar con Supabase.', 'error');
+    if (!ok) showToast(canWriteToSupabase() ? 'No se pudo sincronizar con Supabase.' : supabaseWriteGuardMessage(), 'error');
   } else {
     const plan = { id: uid(), name, owner, desc, createdAt: new Date().toISOString().slice(0,10), initiatives: [] };
     plans.push(plan);
@@ -2092,7 +2601,7 @@ async function savePlan() {
     showToast('Plan creado correctamente.', 'success');
     renderDashboard();
     const ok = await upsertPlanSupabase(plan);
-    if (!ok) showToast('No se pudo sincronizar con Supabase.', 'error');
+    if (!ok) showToast(canWriteToSupabase() ? 'No se pudo sincronizar con Supabase.' : supabaseWriteGuardMessage(), 'error');
   }
   closePlanModal();
 }
@@ -2112,7 +2621,7 @@ function deletePlanFromCard(planId, e) {
     `¿Deseas eliminar "${plan.name}" y todas sus ${plan.initiatives.length} iniciativas? Esta acción no se puede deshacer.`,
     async () => {
       const ok = await deletePlanSupabase(planId);
-      if (!ok) { showToast('No se pudo eliminar en Supabase.', 'error'); return; }
+      if (!ok) { showToast(canWriteToSupabase() ? 'No se pudo eliminar en Supabase.' : supabaseWriteGuardMessage(), 'error'); return; }
       plans = plans.filter(p => p.id !== planId);
       saveData();
       renderDashboard();
@@ -2128,7 +2637,7 @@ function deleteCurrentPlan() {
     `¿Deseas eliminar "${plan.name}" y todas sus ${plan.initiatives.length} iniciativas? Esta acción no se puede deshacer.`,
     async () => {
       const ok = await deletePlanSupabase(currentPlanId);
-      if (!ok) { showToast('No se pudo eliminar en Supabase.', 'error'); return; }
+      if (!ok) { showToast(canWriteToSupabase() ? 'No se pudo eliminar en Supabase.' : supabaseWriteGuardMessage(), 'error'); return; }
       plans = plans.filter(p => p.id !== currentPlanId);
       saveData();
       showDashboard();
@@ -2262,7 +2771,7 @@ async function saveInitiative() {
   if (currentDetailTab === 'gantt') renderGantt();
   closeInitiativeModal();
   const ok = await upsertInitiativeSupabase(plan.id, targetInit);
-  if (!ok) showToast('No se pudo sincronizar con Supabase.', 'error');
+  if (!ok) showToast(canWriteToSupabase() ? 'No se pudo sincronizar con Supabase.' : supabaseWriteGuardMessage(), 'error');
 }
 
 function editInitiative(initId) {
@@ -2277,7 +2786,7 @@ function deleteInitiative(initId) {
     `¿Deseas eliminar la iniciativa "${init.name}"? Esta acción no se puede deshacer.`,
     async () => {
       const ok = await deleteInitiativeSupabase(initId);
-      if (!ok) { showToast('No se pudo eliminar en Supabase.', 'error'); return; }
+      if (!ok) { showToast(canWriteToSupabase() ? 'No se pudo eliminar en Supabase.' : supabaseWriteGuardMessage(), 'error'); return; }
       plan.initiatives = plan.initiatives.filter(i => i.id !== initId);
       saveData();
       renderDetailHeader(plan);
@@ -2342,6 +2851,252 @@ function escHtml(str) {
 // ═══════════════════════════════════════════════════
 // Tecla Escape y clics fuera de modales deshabilitados intencionalmente.
 // Los modales solo se cierran mediante el botón "Cerrar" o el ícono "X".
+
+// ═══════════════════════════════════════════════════
+// TASKS — inline expandible
+// ═══════════════════════════════════════════════════
+
+function renderTaskToggleBtn(init) {
+  const tasks = init.tasks || [];
+  const hasTasks = tasks.length > 0;
+  const done = tasks.filter(t => t.status === 'completed').length;
+  const label = hasTasks ? `${done}/${tasks.length}` : 'Tareas';
+  return `<button class="task-toggle-btn ${hasTasks ? 'has-tasks' : ''}"
+    id="task-toggle-${init.id}"
+    onclick="event.stopPropagation(); toggleInlineTasks('${init.id}')">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    ${label}
+  </button>`;
+}
+
+function renderInlineTasks(init) {
+  const tasks = init.tasks || [];
+  const done  = tasks.filter(t => t.status === 'completed').length;
+  const pct   = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+
+  const taskRows = tasks.length
+    ? tasks.map((t, idx) => {
+        const fillColor = progressColor(t.progress || 0);
+        const phases = (t.phases||[]).map(p =>
+          `<span class="badge badge-phase-${p}" style="font-size:9px;padding:2px 7px;">${phaseLabel(p)}</span>`
+        ).join('');
+        const isCompleted = t.status === 'completed';
+        return `
+        <div class="task-inline-row ${isCompleted ? 'done' : ''}" onclick="event.stopPropagation()">
+          <div class="task-inline-check ${isCompleted ? 'checked' : ''}"
+            onclick="inlineToggleTaskDone('${init.id}', ${idx})">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+              <span class="task-inline-name">${escHtml(t.name)}</span>
+              <span class="badge badge-${t.priority||'medium'}" style="font-size:9px;padding:2px 7px;">${priorityLabel(t.priority||'medium')}</span>
+              <span class="badge badge-${t.status||'not-started'}" style="font-size:9px;padding:2px 7px;">${statusLabel(t.status||'not-started')}</span>
+              ${phases}
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+              ${t.responsible ? `<span style="font-family:var(--mono);font-size:9px;color:var(--muted);opacity:.7;">${escHtml(t.responsible)}</span>` : ''}
+              ${t.responsibleStratika ? `<span style="font-family:var(--mono);font-size:9px;color:var(--cyan);opacity:.7;">${escHtml(t.responsibleStratika)}</span>` : ''}
+              ${t.start ? `<span style="font-family:var(--mono);font-size:9px;color:var(--muted);opacity:.5;">${formatDate(t.start)} → ${formatDate(t.end)}</span>` : ''}
+              ${typeof t.progress === 'number' ? `
+              <div style="display:flex;align-items:center;gap:5px;">
+                <div class="progress-bar" style="height:2px;width:60px;">
+                  <div class="progress-fill" style="width:${t.progress}%;background:${fillColor};"></div>
+                </div>
+                <span style="font-family:var(--mono);font-size:9px;color:var(--light);">${t.progress}%</span>
+              </div>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0;">
+            <button class="btn btn-ghost btn-icon btn-sm" title="Editar tarea"
+              onclick="openTaskEditModal('${init.id}', ${idx})">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="task-inline-del" title="Eliminar"
+              onclick="inlineDeleteTask('${init.id}', ${idx})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>`;
+      }).join('')
+    : `<div style="font-size:12px;color:var(--muted);opacity:.4;padding:8px 0;">Sin tareas. Agrega la primera.</div>`;
+
+  const footer = tasks.length ? `
+    <div class="task-inline-footer">
+      <span>${done} de ${tasks.length} completadas · ${pct}%</span>
+      <div class="task-inline-progress">
+        <div class="progress-bar" style="height:3px;">
+          <div class="progress-fill" style="background:var(--blue);width:${pct}%;"></div>
+        </div>
+      </div>
+    </div>` : '';
+
+  return `<div class="task-inline-wrap" onclick="event.stopPropagation()">
+    <div class="task-inline-header">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Tareas de la iniciativa
+    </div>
+    <div style="margin-bottom:12px;">
+      <button class="btn btn-primary btn-sm" onclick="openTaskEditModal('${init.id}', null)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva Tarea
+      </button>
+    </div>
+    <div class="task-inline-list" id="task-inline-list-${init.id}">${taskRows}</div>
+    ${footer}
+  </div>`;
+}
+
+function toggleInlineTasks(initId) {
+  const row = document.getElementById('task-subrow-' + initId);
+  const btn = document.getElementById('task-toggle-' + initId);
+  if (!row) return;
+  const isOpen = row.style.display !== 'none';
+  row.style.display = isOpen ? 'none' : '';
+  btn.classList.toggle('expanded', !isOpen);
+  if (!isOpen) {
+    setTimeout(() => {
+      const inp = document.getElementById('task-input-' + initId);
+      if (inp) inp.focus();
+    }, 50);
+  }
+}
+
+let currentTaskInitId = null;
+let currentTaskIdx    = null;
+
+function getInitById(initId) {
+  const plan = getPlan(currentPlanId);
+  return plan ? plan.initiatives.find(i => i.id === initId) : null;
+}
+
+function refreshInlineTasksUI(initId) {
+  const init = getInitById(initId);
+  if (!init) return;
+  const subrow = document.getElementById('task-subrow-' + initId);
+  if (subrow) {
+    const td = subrow.querySelector('td');
+    if (td) td.innerHTML = renderInlineTasks(init);
+  }
+  const btn = document.getElementById('task-toggle-' + initId);
+  if (btn) {
+    const tasks    = init.tasks || [];
+    const hasTasks = tasks.length > 0;
+    const done     = tasks.filter(t => t.status === 'completed').length;
+    btn.innerHTML  = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      ${hasTasks ? `${done}/${tasks.length}` : 'Tareas'}`;
+    btn.className  = `task-toggle-btn ${hasTasks ? 'has-tasks' : ''} expanded`;
+  }
+}
+
+// ── Marcar completada / no completada con el checkbox ──
+function inlineToggleTaskDone(initId, idx) {
+  const init = getInitById(initId);
+  if (!init || !init.tasks[idx]) return;
+  const t = init.tasks[idx];
+  t.status = (t.status === 'completed') ? 'not-started' : 'completed';
+  if (t.status === 'completed') t.progress = 100;
+  saveData();
+  refreshInlineTasksUI(initId);
+}
+
+function inlineDeleteTask(initId, idx) {
+  const init = getInitById(initId);
+  if (!init) return;
+  init.tasks.splice(idx, 1);
+  saveData();
+  refreshInlineTasksUI(initId);
+}
+
+// ── Modal de edición de tarea ──
+function openTaskEditModal(initId, idx) {
+  currentTaskInitId = initId;
+  currentTaskIdx    = idx; // null = nueva tarea
+
+  const isNew = idx === null;
+  document.getElementById('task-edit-eyebrow').textContent  = isNew ? 'Nueva tarea' : 'Editar tarea';
+  document.getElementById('task-edit-title').textContent    = isNew ? 'Nueva Tarea' : 'Editar Tarea';
+  document.getElementById('task-edit-save-text').textContent = isNew ? 'Agregar Tarea' : 'Guardar Cambios';
+
+  let t = { name:'', responsible:'', responsibleStratika:'', start:'', end:'',
+            priority:'medium', status:'not-started', progress:0, phases:[] };
+  if (!isNew) {
+    const init = getInitById(initId);
+    t = { ...t, ...(init.tasks[idx] || {}) };
+  }
+
+  document.getElementById('task-edit-name').value                  = t.name;
+  document.getElementById('task-edit-responsible').value           = t.responsible || '';
+  document.getElementById('task-edit-responsible-stratika').value  = t.responsibleStratika || '';
+  document.getElementById('task-edit-start').value                 = t.start || '';
+  document.getElementById('task-edit-end').value                   = t.end || '';
+  document.getElementById('task-edit-priority').value              = t.priority || 'medium';
+  document.getElementById('task-edit-status').value                = t.status || 'not-started';
+  document.getElementById('task-edit-progress').value              = t.progress || 0;
+  document.getElementById('task-range-display').textContent        = (t.progress || 0) + '%';
+  setTaskPhases(t.phases || []);
+
+  document.getElementById('modal-task-edit').classList.add('active');
+  setTimeout(() => document.getElementById('task-edit-name').focus(), 100);
+}
+
+function closeTaskEditModal() {
+  document.getElementById('modal-task-edit').classList.remove('active');
+  currentTaskInitId = null;
+  currentTaskIdx    = null;
+}
+
+function saveTaskEdit() {
+  const name = document.getElementById('task-edit-name').value.trim();
+  if (!name) { showToast('El nombre de la tarea es requerido.', 'error'); document.getElementById('task-edit-name').focus(); return; }
+
+  const data = {
+    name,
+    responsible:          document.getElementById('task-edit-responsible').value.trim(),
+    responsibleStratika:  document.getElementById('task-edit-responsible-stratika').value.trim(),
+    start:                document.getElementById('task-edit-start').value,
+    end:                  document.getElementById('task-edit-end').value,
+    priority:             document.getElementById('task-edit-priority').value,
+    status:               document.getElementById('task-edit-status').value,
+    progress:             parseInt(document.getElementById('task-edit-progress').value) || 0,
+    phases:               getTaskPhases(),
+  };
+
+  const init = getInitById(currentTaskInitId);
+  if (!init) return;
+  if (!init.tasks) init.tasks = [];
+
+  if (currentTaskIdx === null) {
+    init.tasks.push({ id: uid(), ...data });
+    showToast('Tarea agregada.', 'success');
+  } else {
+    init.tasks[currentTaskIdx] = { ...init.tasks[currentTaskIdx], ...data };
+    showToast('Tarea actualizada.', 'success');
+  }
+  saveData();
+  refreshInlineTasksUI(currentTaskInitId);
+  closeTaskEditModal();
+}
+
+// ── Phase toggles para el modal de tarea ──
+function toggleTaskPhase(el) {
+  const phase = el.dataset.phase;
+  el.classList.toggle('active-' + phase);
+}
+
+function getTaskPhases() {
+  return Array.from(document.querySelectorAll('#task-phase-toggle-group .phase-toggle'))
+    .filter(el => ['entendimiento','definicion','ejecucion'].some(p => el.classList.contains('active-'+p)))
+    .map(el => el.dataset.phase);
+}
+
+function setTaskPhases(phases) {
+  document.querySelectorAll('#task-phase-toggle-group .phase-toggle').forEach(el => {
+    const phase = el.dataset.phase;
+    el.classList.remove('active-entendimiento','active-definicion','active-ejecucion');
+    if (phases && phases.includes(phase)) el.classList.add('active-' + phase);
+  });
+}
 
 // ═══════════════════════════════════════════════════
 // DETAIL TABS
@@ -2567,6 +3322,7 @@ function monthAbbr(m) { return MONTH_NAMES[m]; }
   await loadData();
   renderDashboard();
   startSupabaseSync();
+  syncFromSupabaseToLocal(false);
 })();
 </script>
 </body>
